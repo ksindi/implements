@@ -13,7 +13,7 @@ def test_empty():
         pass
 
 
-def test_complex():
+def test_with_args_kwargs():
     class FooInterface(Interface):
         def foo(self, a, b=7, *args, **kwargs):
             pass
@@ -193,7 +193,7 @@ def test_static():
                 pass
 
 
-def test_kwarg_only():
+def test_kwargs_only():
     class FooInterface(Interface):
         def foo(self, *, a):
             pass
@@ -236,3 +236,39 @@ def test_multiple_interfaces():
         class FooImplementationNoFoo:
             def bar(self, a):
                 pass
+
+
+def test_interface_inheritance():
+    class BaseInterface(Interface):
+        def bar(self):
+            pass
+
+    class FooInterface(BaseInterface):
+        def foo(self):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            def foo(self):
+                pass
+
+
+def test_class_inheritance():
+    # TODO
+    class FooInterface(Interface):
+        def foo(self):
+            pass
+
+    @implements(FooInterface)
+    class FooImplementation:
+        def foo(self):
+            pass
+
+
+def test_type_annotation():
+    pass
+
+
+def test_cache():
+    pass

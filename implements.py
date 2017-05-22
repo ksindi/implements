@@ -4,10 +4,10 @@
 :license: MIT, see LICENSE for more details.
 """
 import inspect
+
 from pkg_resources import get_distribution, DistributionNotFound
 
 __all__ = ['Interface', 'implements']
-
 __title__ = 'implements'
 __author__ = 'Kamil Sindi'
 __license__ = 'MIT'
@@ -23,10 +23,14 @@ class Interface:
     pass
 
 
-def implements(interface_cls):
+def implements(interface_cls, *, check_types=True, cache=True):
+    if cache:
+        pass  # TODO
     def _decorator(cls):
         verify_methods(interface_cls, cls)
         verify_properties(interface_cls, cls)
+        if check_types:
+            pass  # TODO
         return cls
 
     return _decorator
@@ -46,11 +50,19 @@ def verify_methods(src_cls, tgt_cls):
 
 def verify_properties(src_cls, tgt_cls):
     prop_attrs = dict(fget='getter', fset='setter', fdel='deleter')
-    for name, prop in inspect.getmembers(src_cls, lambda v: hasattr(v, 'fget')):
-        impl = getattr(tgt_cls, name, None)
+    for name, src_prop in inspect.getmembers(src_cls, lambda v: hasattr(v, 'fget')):
+        tgt_prop = getattr(tgt_cls, name, None)
         for attr in prop_attrs:
             # for some reason instanceof doesn't work
-            if type(getattr(prop, attr, None)) != type(getattr(impl, attr, None)):
+            src_prop_type = type(getattr(src_prop, attr, None))
+            tgt_prop_type = type(getattr(tgt_prop, attr, None))
+            if src_prop_type != tgt_prop_type:
                 raise NotImplementedError(
-                    "Class '{}' must implement a {} for property '{}' defined in interface '{}'.".format(
-                        tgt_cls.__name__, prop_attrs[attr], name, src_cls.__name__))
+                    """Class '{}' must implement a {} for property '{}'
+                    defined in interface '{}'.""".format(tgt_cls.__name__,
+                                                         prop_attrs[attr], name,
+                                                         src_cls.__name__))
+
+
+def verify_types(src_cls, tgt_cls):
+    pass
