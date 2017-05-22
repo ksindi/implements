@@ -178,3 +178,61 @@ def test_bad_constructor():
         class FooImplementation:
             def __init__(self):
                 pass
+
+
+def test_static():
+    class FooInterface(Interface):
+        @staticmethod
+        def foo():
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            def __init__(self):
+                pass
+
+
+def test_kwarg_only():
+    class FooInterface(Interface):
+        def foo(self, *, a):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            def foo(self, a):
+                pass
+
+
+def test_multiple_interfaces():
+    class FooInterface(Interface):
+        def foo(self):
+            pass
+
+    class BarInterface(Interface):
+        def bar(self):
+            pass
+
+    @implements(BarInterface)
+    @implements(FooInterface)
+    class FooImplementation:
+        def foo(self):
+            pass
+
+        def bar(self):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(BarInterface)
+        @implements(FooInterface)
+        class FooImplementationNoBar:
+            def foo(self, a):
+                pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(BarInterface)
+        @implements(FooInterface)
+        class FooImplementationNoFoo:
+            def bar(self, a):
+                pass
