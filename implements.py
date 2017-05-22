@@ -34,7 +34,8 @@ def implements(interface_cls, *, cache=True):
         # verify_attributes  # TODO
         # verify_magic_methods  # TODO
         # verify_descriptors  # TODO
-        # test other decorators are fine
+        # test other decorators are fine # TODO
+        # test interface method collision # TODO
         return cls
 
     return _decorator
