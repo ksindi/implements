@@ -256,6 +256,39 @@ def test_multiple_interfaces():
                 pass
 
 
+def test_interface_name_collision():
+    class Foo1Interface(Interface):
+        def foo(self):
+            pass
+
+    class Foo2Interface(Interface):
+        def foo(self):
+            pass
+
+    @implements(Foo2Interface)
+    @implements(Foo1Interface)
+    class FooImplementation:
+        def foo(self):
+            pass
+
+
+def test_interface_name_and_signature_collision():
+    class Foo1Interface(Interface):
+        def foo(self):
+            pass
+
+    class Foo2Interface(Interface):
+        def foo(self) -> str:
+            return 'foo'
+
+    with pytest.raises(NotImplementedError):
+        @implements(Foo2Interface)
+        @implements(Foo1Interface)
+        class FooImplementation:
+            def foo(self):
+                pass
+
+
 def test_interface_inheritance():
     class BaseInterface(Interface):
         def bar(self):
@@ -321,6 +354,44 @@ def test_classmethods():
         @implements(FooInterface)
         class FooImplementation:
             pass
+
+
+def test_other_decorator_compat():
+    def decorator(cls):
+        class Wrapper(object):
+            def __init__(self, *args):
+                self.wrapped = cls(*args)
+
+            def __getattr__(self, name):
+                print('Getting the {} of {}'.format(name, self.wrapped))
+                return getattr(self.wrapped, name)
+
+        return Wrapper
+
+    class FooInterface(Interface):
+        def foo(self):
+            pass
+
+    @decorator
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+
+        def foo(self):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        @decorator
+        class FooImplementationFail(object):
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+            def foo(self):
+                pass
 
 
 def test_cache():

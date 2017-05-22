@@ -34,8 +34,6 @@ def implements(interface_cls, *, cache=True):
         # verify_attributes  # TODO
         # verify_magic_methods  # TODO
         # verify_descriptors  # TODO
-        # test other decorators are fine # TODO
-        # test interface method collision # TODO
         return cls
 
     return _decorator
@@ -49,7 +47,7 @@ def verify_methods(interface_cls, cls):
         cls_signature = inspect.signature(cls_method) if cls_method else None
         if cls_signature != signature:
             raise NotImplementedError(
-                "Class '{}' must implement method '{}({})' defined in interface '{}'"  # flake8: noqa
+                "'{}' must implement method '{}({})' defined in interface '{}'"
                 .format(cls.__name__, name, signature, interface_cls.__name__)
             )
 
@@ -62,6 +60,6 @@ def verify_properties(interface_cls, cls):
             # instanceof doesn't work for class function comparison
             if type(getattr(prop, attr, None)) != type(getattr(cls_prop, attr, None)):
                 raise NotImplementedError(
-                    "Class '{}' must implement a {} for property '{}' defined in interface '{}'"  # flake8: noqa
+                    "'{}' must implement a {} for property '{}' defined in interface '{}'"  # flake8: noqa
                     .format(cls.__name__, prop_attrs[attr], name, interface_cls.__name__)
                 )
