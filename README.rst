@@ -24,6 +24,20 @@ To install the latest development version from `GitHub <https://github.com/ksind
 
     pip install git+git://github.com/ksindi/implements.git
 
+Advantages
+----------
+
+1. `Favor composition over inheritance<https://en.wikipedia.org/wiki/Composition_over_inheritance>`_.
+2. Inheriting from multiple classes can be problematic, especially when the
+superclasses have the same method name but different signatures. Implements will
+throw a descriptive error if that happens to ensure integrity of contracts.
+3. It's cleaner. Using decorators makes it clear we want to implement an
+interface and not inherit behavior.
+4. Do you really want to deal with Python MRO?
+5. There's a cache option that only checks the first time the class is
+instantiated.
+6. Code is very lightweight: you can just copy the file over.
+
 Usage
 -----
 
