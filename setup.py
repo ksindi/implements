@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Distutils setup file, used to install or test 'implements'."""
 from __future__ import print_function
 
@@ -42,7 +41,6 @@ if __name__ == '__main__':
             Programming Language :: Python :: 3
             Programming Language :: Python :: 3.5
             Programming Language :: Python :: 3.6
-            Topic :: Scientific/Engineering
             """).strip().splitlines(),
         keywords=['implements', 'interfaces'],
         license='MIT',

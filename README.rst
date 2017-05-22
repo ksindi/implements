@@ -7,25 +7,22 @@ Implements
 .. image:: https://readthedocs.org/projects/implements/badge/?version=latest
     :target: http://implements.readthedocs.io
     :alt: Documentation Build Status
-.. image:: https://img.shields.io/codecov/c/github/ksindi/ksindi/implements/master.svg
-    :target: https://codecov.io/gh/ksindi/ksindi/implements
-    :alt: Test Suite Coverage
 .. image:: https://img.shields.io/pypi/v/implements.svg
     :target: https://pypi.python.org/pypi/implements
     :alt: PyPI Version
 
-Pythonic interfaces
+Lighweight Pythonic interfaces
 
 Install
 -------
 
 Implements is available on PyPI can be installed with `pip <https://pip.pypa.io>`_.::
 
-    $ pip install implements
+    pip install implements
 
 To install the latest development version from `GitHub <https://github.com/ksindi/implements>`_::
 
-    $ pip install git+git://github.com/ksindi/implements.git
+    pip install git+git://github.com/ksindi/implements.git
 
 Usage
 -----
@@ -35,23 +32,19 @@ Here's a very simple example:
 
 .. code-block:: python
 
-    import implements
-    # Fill this section in with the common use-case.
+    from implements import Interface, implements
 
-::
+    class Quackable(Interface):
+        def quack(self):
+            pass
 
-    implements
+    @implements(Quackable)
+    class MallardDuck:
+        def quack(self):
+            pass
 
-To see the full list of options:
 
-::
-
-    implements --help
-    
-    Options:
-      debug:            drop a debugger if an exception is raised
-      help (-h):        argparse help
-      log-level (-l)    logging level (default=INFO)
+    duck = MallardDuck()
 
 API Reference
 -------------

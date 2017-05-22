@@ -35,7 +35,7 @@ install-all:
 	pip install -e .[all]
 
 lint:
-	pytest --flake8 implements tests
+	pytest --flake8 implements.py tests.py
 
 test:
 	python setup.py test

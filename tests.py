@@ -55,6 +55,24 @@ def test_setters():
                 pass
 
 
+def test_deleters():
+    class FooInterface(Interface):
+        @property
+        def foo(self):
+            pass
+
+        @foo.deleter
+        def foo(self, val):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            @property
+            def foo(self):
+                pass
+
+
 def test_missing_method():
     class FooInterface(Interface):
         def foo(self):
@@ -261,13 +279,48 @@ def test_class_inheritance():
             pass
 
     @implements(FooInterface)
-    class FooImplementation:
+    class ParentImplementation:
         def foo(self):
             pass
 
+    class ChildImplementation(ParentImplementation):
+        pass
 
-def test_type_annotation():
-    pass
+
+def test_rtn_type_annotation():
+    class FooInterface(Interface):
+        def foo(self) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            def foo(self) -> int:
+                pass
+
+
+def test_arg_type_annotation():
+    class FooInterface(Interface):
+        def foo(self, arg: str):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            def foo(self, arg: int):
+                pass
+
+
+def test_classmethods():
+    class FooInterface(Interface):
+        @classmethod
+        def foo(cls):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementation:
+            pass
 
 
 def test_cache():
