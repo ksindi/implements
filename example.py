@@ -1,36 +1,39 @@
 """Example"""
 
-from implements import implements, Interface
+from implements import Interface, implements
 
 
-class Vehicle(Interface):
-    wheels = None
-
-    def start_engine(self):
-        pass
-
-    def drive(self):
-        pass
-
-    @staticmethod
-    def make_car_sound():
+class Flyable(Interface):
+    def fly(self):
         pass
 
 
-@implements(Vehicle)
-class Car:
-    wheels = 4
-
-    def start_engine(self):
+class Quackable(Interface):
+    def quack(self):
         pass
 
-    def drive(self):
+
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+
+@implements(Flyable)
+class BaldEagle(Animal):
+    def fly(self):
         pass
 
-    @staticmethod
-    def make_car_sound():
-        print('Vrooom!')
+
+@implements(Flyable)
+@implements(Quackable)
+class MallardDuck(Animal):
+    def fly(self):
+        pass
+
+    def quack(self):
+        print("quack!")
 
 
 if __name__ == '__main__':
-    car = Car()
+    duck = MallardDuck("Mallory")
+    eagle = BaldEagle("Murica")

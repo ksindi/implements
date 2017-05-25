@@ -1,5 +1,5 @@
 Implements
-=============
+==========
 
 .. image:: https://img.shields.io/travis/ksindi/ksindi/implements/master.svg
     :target: https://travis-ci.org/ksindi/ksindi/implements
@@ -11,7 +11,7 @@ Implements
     :target: https://pypi.python.org/pypi/implements
     :alt: PyPI Version
 
-Lighweight Pythonic interfaces
+Pythonic interfaces
 
 Install
 -------
@@ -31,18 +31,17 @@ Advantages
 2. Inheriting from multiple classes can be problematic, especially when the
 superclasses have the same method name but different signatures. Implements will
 throw a descriptive error if that happens to ensure integrity of contracts.
-3. It's cleaner. Using decorators makes it clear we want to implement an
-interface and not inherit behavior.
-4. Do you really want to deal with Python MRO?
-5. There's a cache option that only checks the first time the class is
-instantiated.
-6. Code is very lightweight: you can just copy the file over.
+3. The implements decorators are evaluated at import time. Any errors will be
+raised then and not when the method is called.
+4. It's cleaner. Using decorators makes it clear we want share behavior.
+5. Codebase is tiny: you can just copy the file over. This repo exists
+more for test coverage.
 
 Usage
 -----
 
 After installing Implements you can use it like any other Python module.
-Here's a very simple example:
+Here's a simple example:
 
 .. code-block:: python
 
@@ -55,10 +54,12 @@ Here's a very simple example:
     @implements(Quackable)
     class MallardDuck:
         def quack(self):
-            pass
+            print("quack!")
 
 
     duck = MallardDuck()
+
+You can find a more detailed example in example.py.
 
 API Reference
 -------------
