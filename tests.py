@@ -172,24 +172,6 @@ def test_missing_property():
             pass
 
 
-def test_missing_set_property():
-    class FooInterface(Interface):
-        @property
-        def foo(self):
-            pass
-
-        @foo.setter
-        def foo(self, value):
-            pass
-
-    with pytest.raises(NotImplementedError):
-        @implements(FooInterface)
-        class FooImplementation:
-            @property
-            def foo(self):
-                pass
-
-
 def test_bad_constructor():
     class FooInterface(Interface):
         def __init__(self, a):
