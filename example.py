@@ -1,10 +1,21 @@
 """Example"""
+from enum import Enum
 
 from implements import Interface, implements
 
 
+class Direction(Enum):
+    N = 'North'
+    W = 'West'
+    S = 'South'
+    E = 'East'
+
+
 class Flyable(Interface):
     def fly(self):
+        pass
+
+    def migrate(self) -> Direction:
         pass
 
 
@@ -23,6 +34,9 @@ class BaldEagle(Animal):
     def fly(self):
         pass
 
+    def migrate(self) -> Direction:
+        return Direction.W
+
 
 @implements(Flyable)
 @implements(Quackable)
@@ -33,7 +47,14 @@ class MallardDuck(Animal):
     def quack(self):
         print("quack!")
 
+    def migrate(self) -> Direction:
+        return Direction.S
 
-if __name__ == '__main__':
-    duck = MallardDuck("Mallory")
-    eagle = BaldEagle("Murica")
+
+# this will raise
+# NotImplementedError: 'RubberDuck' must implement method 'quack((self))' defined in interface 'Quackable'
+'''
+@implements(Quackable)
+class RubberDuck(Animal):
+    pass
+'''
