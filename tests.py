@@ -1,7 +1,11 @@
 """pytest unittests"""
+import sys
 import pytest
 
 from implements import Interface, implements
+
+
+py36 = pytest.mark.skipif(sys.version_info < (3, 6), reason='requires py3.6')
 
 
 def test_empty():
@@ -394,5 +398,65 @@ def test_other_decorator_compat():
                 pass
 
 
-def test_cache():
-    pass
+def test_magic_methods():
+    class FooInterface(Interface):
+        def __add__(self, other):
+            pass
+
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        def __add__(self, other):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail(object):
+            pass
+
+
+@py36
+def test_new_style_descriptors():
+    class IntField:
+        def __get__(self, instance, owner):
+            return instance.__dict__[self.name]
+
+        def __set__(self, instance, value):
+            if not isinstance(value, int):
+                raise ValueError(f'expecting integer in {self.name}')
+            instance.__dict__[self.name] = value
+
+        def __set_name__(self, owner, name):
+            self.name = name
+
+    class FooInterface(Interface):
+        def foo(self):
+            pass
+
+    @implements(FooInterface)
+    class FooImplementation:
+        int_field = IntField()
+
+        def foo(self):
+            pass
+
+
+@py36
+def test_new_style_metaclasses():
+    class Polygon:
+        def __init_subclass__(cls, sides, **kwargs):
+            cls.sides = sides
+            if cls.sides < 3:
+                raise ValueError("polygons need 3+ sides")
+
+        @classmethod
+        def interior_angles(cls):
+            return (cls.sides - 2) * 180
+
+    class PolygonInterface(Interface):
+        def rotate(self):
+            pass
+
+    @implements(PolygonInterface)
+    class Triangle(Polygon, sides=3):
+        def rotate(self):
+            pass

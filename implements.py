@@ -24,16 +24,10 @@ class Interface:
     pass
 
 
-def implements(interface_cls, *, cache=True):
-    if cache:
-        pass  # TODO
-
+def implements(interface_cls):
     def _decorator(cls):
         verify_methods(interface_cls, cls)
         verify_properties(interface_cls, cls)
-        # verify_attributes  # TODO
-        # verify_magic_methods  # TODO
-        # verify_descriptors  # TODO
         return cls
 
     return _decorator
