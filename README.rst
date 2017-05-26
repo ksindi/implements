@@ -27,7 +27,7 @@ To install the latest development version from `GitHub <https://github.com/ksind
 Advantages
 ----------
 
-1. `Favor composition over inheritance<https://en.wikipedia.org/wiki/Composition_over_inheritance>`_.
+1. `Favor composition over inheritance <https://en.wikipedia.org/wiki/Composition_over_inheritance>`_.
 2. Inheriting from multiple classes can be problematic, especially when the
 superclasses have the same method name but different signatures. Implements will
 throw a descriptive error if that happens to ensure integrity of contracts.
@@ -75,7 +75,7 @@ You can find a more detailed example in ``example.py`` and by looking at ``tests
 Credit
 ------
 
-The implementation of this was inspired by a `PR <https://github.com/pmatiello/python-interface/pull/1/files>`_ @elifiner made.
+Implementation was inspired by a `PR <https://github.com/pmatiello/python-interface/pull/1/files>`_ by @elifiner.
 
 Test
 ----
