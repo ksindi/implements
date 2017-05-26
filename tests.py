@@ -17,15 +17,38 @@ def test_empty():
         pass
 
 
-def test_with_args_kwargs():
+def test_args_kwargs():
     class FooInterface(Interface):
-        def foo(self, a, b=7, *args, **kwargs):
+        def foo(self, x, y=1, *args, **kwargs):
             pass
 
     @implements(FooInterface)
-    class FooImplementation:
-        def foo(self, a, b=7, *args, **kwargs):
+    class FooImplementationPass:
+        def foo(self, x, y=1, *args, **kwargs):
             pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(self, x, y=7, *args):
+                pass
+
+
+def test_with_kwarg_only():
+    class FooInterface(Interface):
+        def foo(self, a, *, b):
+            pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, a, *, b):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(self, a, b):
+                pass
 
 
 def test_property():
@@ -193,8 +216,7 @@ def test_static():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementation:
-            def __init__(self):
-                pass
+            pass
 
 
 def test_kwargs_only():
