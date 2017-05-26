@@ -20,6 +20,8 @@ class Flyable(Interface):
 
 
 class Quackable(Interface):
+    echoes = None
+
     def quack(self):
         pass
 
@@ -41,6 +43,8 @@ class BaldEagle(Animal):
 @implements(Flyable)
 @implements(Quackable)
 class MallardDuck(Animal):
+    echoes = True
+
     def fly(self):
         pass
 
@@ -49,12 +53,3 @@ class MallardDuck(Animal):
 
     def migrate(self) -> Direction:
         return Direction.S
-
-
-# this will raise
-# NotImplementedError: 'RubberDuck' must implement method 'quack((self))' defined in interface 'Quackable'
-'''
-@implements(Quackable)
-class RubberDuck(Animal):
-    pass
-'''

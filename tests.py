@@ -418,6 +418,21 @@ def test_magic_methods():
             pass
 
 
+def test_attributes():
+    class FooInterface(Interface):
+        a = None
+
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        a = 1
+        b = 2
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail(object):
+            pass
+
+
 @py36
 def test_new_style_descriptors():
     class IntField:
@@ -433,14 +448,15 @@ def test_new_style_descriptors():
             self.name = name
 
     class FooInterface(Interface):
-        def foo(self):
-            pass
-
-    @implements(FooInterface)
-    class FooImplementation:
         int_field = IntField()
 
-        def foo(self):
+    @implements(FooInterface)
+    class FooImplementationPass:
+        int_field = IntField()
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
             pass
 
 
