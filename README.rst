@@ -33,7 +33,8 @@ superclasses have the same method name but different signatures. Implements will
 throw a descriptive error if that happens to ensure integrity of contracts.
 3. The decorators are evaluated at import time. Any errors will be raised then
 and not when an object is instantiated or a method is called.
-4. It's cleaner. Using decorators makes it clear we want share behavior.
+4. It's cleaner. Using decorators makes it clear we want share behavior. Also,
+arguments are not allowed to be renamed.
 5. Codebase is tiny: you can just copy the file over. This repo exists
 more for test coverage.
 
@@ -69,7 +70,12 @@ Below will raise a ``NotImplementedError`` exception:
 
     NotImplementedError: 'RubberDuck' must implement method 'quack((self))' defined in interface 'Quackable'
 
-You can find a more detailed example in ``example.py``.
+You can find a more detailed example in ``example.py`` and by looking at ``tests.py``.
+
+Credit
+------
+
+The implementation of this was inspired by a `PR <https://github.com/pmatiello/python-interface/pull/1/files>`_ @elifiner made.
 
 Test
 ----
