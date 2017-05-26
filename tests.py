@@ -17,20 +17,20 @@ def test_empty():
         pass
 
 
-def test_args_kwargs():
+def test_with_args_kwargs():
     class FooInterface(Interface):
-        def foo(self, x, y=1, *args, **kwargs):
+        def foo(self, a, b=1, *args, **kwargs):
             pass
 
     @implements(FooInterface)
     class FooImplementationPass:
-        def foo(self, x, y=1, *args, **kwargs):
+        def foo(self, a, b=1, *args, **kwargs):
             pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
-            def foo(self, x, y=7, *args):
+            def foo(self, a, b=7, *args):
                 pass
 
 
@@ -430,6 +430,20 @@ def test_attributes():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail(object):
+            pass
+
+
+def test_async():
+    class AsyncInterface:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args, **kwargs):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(AsyncInterface)
+        class AsyncImplementation:
             pass
 
 
