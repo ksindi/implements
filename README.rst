@@ -36,13 +36,16 @@ Advantages
 Usage
 -----
 
-Consider the implementation using inheritance:
+Let's say we wanted to write a class ``MallardDuck`` that inherits from ``Duck`` and implements ``Flyable`` and ``Quackable``.
+
+There are two idiomatic ways to write this. The first way is writing base classes raising ``NotImplementedError`` in each method.
 
 .. code-block:: python
 
     class Duck:
         def __init__(self, age):
             self.age = age
+
 
     class Flyable:
         @staticmethod
@@ -65,7 +68,6 @@ Consider the implementation using inheritance:
 
         def __init__(self, age):
             super(MallardDuck, self).__init__(age)
-            pass
 
         def migrate(self, dir):
             return True
@@ -74,13 +76,13 @@ Consider the implementation using inheritance:
             pass
 
 
-A couple drawbacks implementing it this way:
+But there are a couple drawbacks implementing it this way:
 
-1. It's unclear without checking each parent class where super is being called.
+1. We would only get a ``NotImplementedError`` when calling ``quack`` which can happen much later during runtime. Also, raising ``NotImplementedError`` everywhere looks clunky.
 
-2. Similarly the return types of ``fly`` in ``Flyable`` and ``Quackable`` are different. Someone unfamiliar with Python would have to read up on `Method Resolution Order <https://www.python.org/download/releases/2.3/mro/>`_.
+2. It's unclear without checking each parent class where super is being called.
 
-3. We would only get a ``NotImplementedError`` when calling ``quack`` which can happen much later during runtime. Also, raising ``NotImplementedError`` everywhere looks clunky.
+3. Similarly the return types of ``fly`` in ``Flyable`` and ``Quackable`` are different. Someone unfamiliar with Python would have to read up on `Method Resolution Order <https://www.python.org/download/releases/2.3/mro/>`_.
 
 4. The writer of ``MallardDuck`` made method ``migrate`` an instance method and renamed the argument to ``dir`` which is confusing.
 
@@ -88,7 +90,57 @@ A couple drawbacks implementing it this way:
 
 The advantage of using implements is it looks cleaner and you would get errors at import time instead of when the method is actually called.
 
-In the above example we would rewrite everything as:
+Another way is to use abstract base classes from the built-in ``abc`` module:
+
+.. code-block:: python
+
+    from abc import ABCMeta, abstractmethod, abstractstaticmethod
+
+
+    class Duck(metaclass=ABCMeta):
+        def __init__(self, age):
+            self.age = age
+
+
+    class Flyable(metaclass=ABCMeta):
+        @abstractstaticmethod
+        def migrate(direction):
+            pass
+
+        @abstractmethod
+        def fly(self) -> str:
+            pass
+
+
+    class Quackable(metaclass=ABCMeta):
+        @abstractmethod
+        def fly(self) -> bool:
+            pass
+
+        @abstractmethod
+        def quack(self):
+            pass
+
+
+    class MallardDuck(Duck, Quackable, Flyable):
+        def __init__(self, age):
+            super(MallardDuck, self).__init__(age)
+
+        def migrate(self, dir):
+            return True
+
+        def fly(self):
+            pass
+
+        def quack(self):
+            pass
+
+Using abstract base classes has the advantage of throwing an error early if a
+method is not implemented and having static analysis tools warn if two methods
+have different signatures. But it doesn't solve issues 2-4. It also in my
+opinion doesn't look pythonic.
+
+In the above example we could rewrite using implements as:
 
 .. code-block:: python
 
