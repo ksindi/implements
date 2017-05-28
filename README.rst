@@ -82,16 +82,15 @@ A couple drawbacks implementing it this way:
 
 1. It's unclear without checking each parent class where super is being called.
 
-2. Similarly the return types of ``fly`` in ``Flyable`` and ``Quackable`` are different. Someone unfamiliary with Python would have to read up on you read up on `Method Resolution Order <https://www.python.org/download/releases/2.3/mro/>_`.
+2. Similarly the return types of ``fly`` in ``Flyable`` and ``Quackable`` are different. Someone unfamiliar with Python would have to read up on `Method Resolution Order <https://www.python.org/download/releases/2.3/mro/>`_.
 
-3. We would only get a ``NotImplementedError`` when calling ``quack`` which can happen much later during runtime. Also raises that error everywhere looks clunky.
+3. We would only get a ``NotImplementedError`` when calling ``quack`` which can happen much later during runtime. Also, raising ``NotImplementedError`` everywhere looks clunky.
 
-4. The writer of ``MallardDuck`` made method ``migrate`` an instance method and changed the argument name to ``dir`` which is confusing.
+4. The writer of ``MallardDuck`` made method ``migrate`` an instance method and renamed the argument to ``dir`` which is confusing.
 
 5. We really want to be differentiating between behavior and inheritance.
 
-The advantage of using implements is it looks cleaner and you would get errors
-at import time instead of when the method is actually called.
+The advantage of using implements is it looks cleaner and you would get errors at import time instead of when the method is actually called.
 
 In the above example we would rewrite everything as:
 
@@ -134,7 +133,7 @@ In the above example we would rewrite everything as:
         def fly(self):
             pass
 
-The above would not throw the following errors:
+The above would now throw the following errors:
 
 .. code-block:: python
 
@@ -142,7 +141,7 @@ The above would not throw the following errors:
     NotImplementedError: 'MallardDuck' must implement method 'quack((self))' defined in interface 'Quackable'
     NotImplementedError: 'MallardDuck' must implement method 'migrate((direction))' defined in interface 'Flyable'
 
-We can solve the above errors by rewriting as:
+We can solve the errors by rewriting for example as:
 
 .. code-block:: python
 
@@ -172,7 +171,7 @@ We can solve the above errors by rewriting as:
 Credit
 ------
 
-Implementation was inspired by a `PR <https://github.com/pmatiello/python-interface/pull/1/files>`_ by @elifiner.
+Implementation was inspired by a `PR <https://github.com/pmatiello/python-interface/pull/1/files>`_ of @elifiner.
 
 Test
 ----
