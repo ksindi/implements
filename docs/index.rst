@@ -1,5 +1,5 @@
-implements: Pythonic interfaces
-====================
+Implements: Pythonic Interfaces
+===============================
 
 .. only:: html
 
