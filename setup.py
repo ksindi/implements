@@ -10,7 +10,7 @@ with open('README.rst') as f:
 if __name__ == '__main__':
     setup(
         name='implements',
-        description='Pythonic interfaces',
+        description='pythonic interfaces',
         long_description=readme,
         url='http://implements.readthedocs.io',
         use_scm_version=True,
