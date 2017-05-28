@@ -34,9 +34,9 @@ if __name__ == '__main__':
         zip_safe=False,
         include_package_data=True,
         classifiers=textwrap.dedent("""
-            Development Status :: 4 - Beta
+            Development Status :: 5 - Production/Stable
             Intended Audience :: Developers
-            License :: OSI Approved :: MIT
+            License :: OSI Approved :: MIT License
             Natural Language :: English
             Programming Language :: Python :: 3
             Programming Language :: Python :: 3.5
