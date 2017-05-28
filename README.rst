@@ -16,7 +16,7 @@ Implements
 Install
 -------
 
-Implements is available on PyPI can be installed with `pip <https://pip.pypa.io>`_::
+Implements is available on PyPI and can be installed with `pip <https://pip.pypa.io>`_::
 
     pip install implements
 
