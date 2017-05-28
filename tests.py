@@ -455,7 +455,7 @@ def test_new_style_descriptors():
 
         def __set__(self, instance, value):
             if not isinstance(value, int):
-                raise ValueError(f'expecting integer in {self.name}')
+                raise ValueError('expecting integer in ()'.format(self.name))
             instance.__dict__[self.name] = value
 
         def __set_name__(self, owner, name):
@@ -480,7 +480,7 @@ def test_new_style_metaclasses():
         def __init_subclass__(cls, sides, **kwargs):
             cls.sides = sides
             if cls.sides < 3:
-                raise ValueError("polygons need 3+ sides")
+                raise ValueError('polygons need 3+ sides')
 
         @classmethod
         def interior_angles(cls):
