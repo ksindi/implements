@@ -1,3 +1,3 @@
-include LICENSE README.rst CHANGELOG.rst LICENSE requirements.txt tox.ini tests.py
+include LICENSE README.rst LICENSE tox.ini tests.py
 recursive-include docs *
 recursive-exclude docs/_build *
