@@ -16,7 +16,7 @@ Implements
 Install
 -------
 
-Implements is available on PyPI can be installed with `pip <https://pip.pypa.io>`_.::
+Implements is available on PyPI can be installed with `pip <https://pip.pypa.io>`_::
 
     pip install implements
 
@@ -137,7 +137,7 @@ The above would now throw the following errors:
     NotImplementedError: 'MallardDuck' must implement method 'quack((self))' defined in interface 'Quackable'
     NotImplementedError: 'MallardDuck' must implement method 'migrate((direction))' defined in interface 'Flyable'
 
-We can solve the errors by rewriting for example as:
+We can solve the above errors by rewriting for example as:
 
 .. code-block:: python
 
