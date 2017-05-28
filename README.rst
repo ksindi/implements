@@ -1,7 +1,7 @@
 Implements
 ==========
 
-.. image:: https://img.shields.io/travis/ksindi/ksindi/implements/master.svg
+.. image:: https://travis-ci.org/ksindi/implements.svg?branch=master
     :target: https://travis-ci.org/ksindi/ksindi/implements
     :alt: Linux and MacOS Build Status
 .. image:: https://readthedocs.org/projects/implements/badge/?version=latest
