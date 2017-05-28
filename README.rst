@@ -20,10 +20,6 @@ Implements is available on PyPI can be installed with `pip <https://pip.pypa.io>
 
     pip install implements
 
-To install the latest development version from `GitHub <https://github.com/ksindi/implements>`_::
-
-    pip install git+git://github.com/ksindi/implements.git
-
 Advantages
 ----------
 
