@@ -184,13 +184,12 @@ Another way is to use abstract base classes from the built-in ``abc`` module:
         def fly(self):
             pass
 
-        def quack(self):
-            pass
 
-Using abstract base classes has the advantage of throwing an error early if a
-method is not implemented and having static analysis tools warn if two methods
-have different signatures. But it doesn't solve issues 2-4. It also in my
-opinion doesn't look pythonic.
+Using abstract base classes has the advantage of throwing an error earlier
+on instantiation if a method is not implemented; also, there are static analysis
+tools that warn if two methods have different signatures. But it doesn't solve
+issues 2-4 and implements will throw an error even earlier in import.
+It also in my opinion doesn't look pythonic.
 
 Credit
 ------
