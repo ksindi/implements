@@ -36,9 +36,62 @@ Advantages
 Usage
 -----
 
-Let's say we wanted to write a class ``MallardDuck`` that inherits from ``Duck`` and implements ``Flyable`` and ``Quackable``.
+.. code-block:: python
 
-There are two idiomatic ways to write this. The first way is writing base classes raising ``NotImplementedError`` in each method.
+    from implements import Interface, implements
+
+
+    class Duck:
+        def __init__(self, age):
+            self.age = age
+
+
+    class Flyable(Interface):
+        @staticmethod
+        def migrate(direction):
+            pass
+
+        def fly(self) -> str:
+            pass
+
+
+    class Quackable(Interface):
+        def fly(self) -> bool:
+            pass
+
+        def quack(self):
+            pass
+
+
+    @implements(Flyable)
+    @implements(Quackable)
+    class MallardDuck(Duck):
+        def __init__(self, age):
+            super(MallardDuck, self).__init__(age)
+
+        def migrate(self, dir):
+            return True
+
+        def fly(self):
+            pass
+
+
+The above would throw the following errors:
+
+.. code-block:: python
+
+    NotImplementedError: 'MallardDuck' must implement method 'fly((self) -> bool)' defined in interface 'Quackable'
+    NotImplementedError: 'MallardDuck' must implement method 'quack((self))' defined in interface 'Quackable'
+    NotImplementedError: 'MallardDuck' must implement method 'migrate((direction))' defined in interface 'Flyable'
+
+You can find a more detailed example in ``example.py`` and by looking at ``tests.py``.
+
+Justification
+-------------
+
+There are currently two idiomatic ways to rewrite the above example.
+
+The first way is to write base classes with mixins raising ``NotImplementedError`` in each method.
 
 .. code-block:: python
 
@@ -74,7 +127,6 @@ There are two idiomatic ways to write this. The first way is writing base classe
 
         def fly(self):
             pass
-
 
 But there are a couple drawbacks implementing it this way:
 
@@ -139,82 +191,6 @@ Using abstract base classes has the advantage of throwing an error early if a
 method is not implemented and having static analysis tools warn if two methods
 have different signatures. But it doesn't solve issues 2-4. It also in my
 opinion doesn't look pythonic.
-
-In the above example we could rewrite using implements as:
-
-.. code-block:: python
-
-    from implements import Interface, implements
-
-
-    class Duck:
-        def __init__(self, age):
-            self.age = age
-
-
-    class Flyable(Interface):
-        def fly(self) -> str:
-            pass
-
-        @staticmethod
-        def migrate(direction):
-            pass
-
-
-    class Quackable(Interface):
-        def fly(self) -> bool:
-            pass
-
-        def quack(self):
-            pass
-
-
-    @implements(Flyable)
-    @implements(Quackable)
-    class MallardDuck(Duck):
-        def __init__(self, age):
-            super(MallardDuck, self).__init__(age)
-
-        def migrate(self, dir):
-            return True
-
-        def fly(self):
-            pass
-
-The above would now throw the following errors:
-
-.. code-block:: python
-
-    NotImplementedError: 'MallardDuck' must implement method 'fly((self) -> bool)' defined in interface 'Quackable'
-    NotImplementedError: 'MallardDuck' must implement method 'quack((self))' defined in interface 'Quackable'
-    NotImplementedError: 'MallardDuck' must implement method 'migrate((direction))' defined in interface 'Flyable'
-
-We can solve the above errors by rewriting for example as:
-
-.. code-block:: python
-
-    class Quackable(Interface):
-        def fly(self) -> str:
-            pass
-
-        def quack(self):
-            pass
-
-    @implements(Flyable)
-    @implements(Quackable)
-    class MallardDuck(Duck):
-        def __init__(self, age):
-            super(MallardDuck, self).__init__(age)
-
-        @staticmethod
-        def migrate(direction):
-            pass
-
-        def fly(self) -> str:
-            pass
-
-        def quack(self):
-            pass
 
 Credit
 ------
