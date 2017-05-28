@@ -3,10 +3,10 @@ Implements
 
 .. image:: https://travis-ci.org/ksindi/implements.svg?branch=master
     :target: https://travis-ci.org/ksindi/ksindi/implements
-    :alt: Linux and MacOS Build Status
+    :alt: Build Status
 .. image:: https://readthedocs.org/projects/implements/badge/?version=latest
-    :target: http://implements.readthedocs.io
-    :alt: Documentation Build Status
+    :target: http://implements.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 .. image:: https://img.shields.io/pypi/v/implements.svg
     :target: https://pypi.python.org/pypi/implements
     :alt: PyPI Version
