@@ -40,36 +40,134 @@ Advantages
 Usage
 -----
 
-After installing Implements you can use it like any other Python module.
-Here's a simple example:
+Consider the implementation using inheritance:
+
+.. code-block:: python
+
+    class Duck:
+        def __init__(self, age):
+            self.age = age
+
+    class Flyable:
+        @staticmethod
+        def migrate(direction):
+            raise NotImplementedError("Flyable is an abstract class")
+
+        def fly(self) -> str:
+            raise NotImplementedError("Flyable is an abstract class")
+
+
+    class Quackable:
+        def fly(self) -> bool:
+            raise NotImplementedError("Quackable is an abstract class")
+
+        def quack(self):
+            raise NotImplementedError("Quackable is an abstract class")
+
+
+    class MallardDuck(Duck, Quackable, Flyable):
+
+        def __init__(self, age):
+            super(MallardDuck, self).__init__(age)
+            pass
+
+        def migrate(self, dir):
+            return True
+
+        def fly(self):
+            pass
+
+
+A couple drawbacks implementing it this way:
+
+1. It's unclear without checking each parent class where super is being called.
+
+2. Similarly the return types of ``fly`` in ``Flyable`` and ``Quackable`` are different. Someone unfamiliary with Python would have to read up on you read up on `Method Resolution Order <https://www.python.org/download/releases/2.3/mro/>_`.
+
+3. We would only get a ``NotImplementedError`` when calling ``quack`` which can happen much later during runtime. Also raises that error everywhere looks clunky.
+
+4. The writer of ``MallardDuck`` made method ``migrate`` an instance method and changed the argument name to ``dir`` which is confusing.
+
+5. We really want to be differentiating between behavior and inheritance.
+
+The advantage of using implements is it looks cleaner and you would get errors
+at import time instead of when the method is actually called.
+
+In the above example we would rewrite everything as:
 
 .. code-block:: python
 
     from implements import Interface, implements
 
+
+    class Duck:
+        def __init__(self, age):
+            self.age = age
+
+
+    class Flyable(Interface):
+        def fly(self) -> str:
+            pass
+
+        @staticmethod
+        def migrate(direction):
+            pass
+
+
     class Quackable(Interface):
+        def fly(self) -> bool:
+            pass
+
         def quack(self):
             pass
 
+
+    @implements(Flyable)
     @implements(Quackable)
-    class MallardDuck:
-        def quack(self):
-            print("quack!")
+    class MallardDuck(Duck):
+        def __init__(self, age):
+            super(MallardDuck, self).__init__(age)
 
+        def migrate(self, dir):
+            return True
 
-    duck = MallardDuck()
+        def fly(self):
+            pass
 
-Below will raise a ``NotImplementedError`` exception:
+The above would not throw the following errors:
 
 .. code-block:: python
 
+    NotImplementedError: 'MallardDuck' must implement method 'fly((self) -> bool)' defined in interface 'Quackable'
+    NotImplementedError: 'MallardDuck' must implement method 'quack((self))' defined in interface 'Quackable'
+    NotImplementedError: 'MallardDuck' must implement method 'migrate((direction))' defined in interface 'Flyable'
+
+We can solve the above errors by rewriting as:
+
+.. code-block:: python
+
+    class Quackable(Interface):
+        def fly(self) -> str:
+            pass
+
+        def quack(self):
+            pass
+
+    @implements(Flyable)
     @implements(Quackable)
-    class RubberDuck:
-        pass
+    class MallardDuck(Duck):
+        def __init__(self, age):
+            super(MallardDuck, self).__init__(age)
 
-    NotImplementedError: 'RubberDuck' must implement method 'quack((self))' defined in interface 'Quackable'
+        @staticmethod
+        def migrate(direction):
+            pass
 
-You can find a more detailed example in ``example.py`` and by looking at ``tests.py``.
+        def fly(self) -> str:
+            pass
+
+        def quack(self):
+            pass
 
 Credit
 ------
