@@ -11,7 +11,7 @@ Implements
     :target: https://pypi.python.org/pypi/implements
     :alt: PyPI Version
 
-*Pythonic interfaces using decorators*
+*pythonic interfaces using decorators*
 
 Install
 -------
