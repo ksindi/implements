@@ -11,7 +11,7 @@ Implements
     :target: https://pypi.python.org/pypi/implements
     :alt: PyPI Version
 
-*pythonic interfaces using decorators*
+*Pythonic interfaces using decorators*
 
 Install
 -------
@@ -19,6 +19,8 @@ Install
 Implements is available on PyPI and can be installed with `pip <https://pip.pypa.io>`_::
 
     pip install implements
+    
+Note Python 3.5+ is required as it relies on new features of `inspect` module.
 
 Advantages
 ----------
