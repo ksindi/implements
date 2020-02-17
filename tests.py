@@ -455,7 +455,7 @@ def test_new_style_descriptors():
 
         def __set__(self, instance, value):
             if not isinstance(value, int):
-                raise ValueError('expecting integer in ()'.format(self.name))
+                raise ValueError('expecting integer in {}'.format(self.name))
             instance.__dict__[self.name] = value
 
         def __set_name__(self, owner, name):
