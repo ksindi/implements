@@ -22,25 +22,20 @@ def test_with_args_kwargs():
         def foo(self, a, b=1, *args, **kwargs):
             pass
 
-    @implements(FooInterface)
-    class FooImplementationPass:
-        def foo(self, a, b=1, *args, **kwargs):
-            pass
-
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
             def foo(self, a, b=7, *args):
                 pass
 
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, a, b=1, *args, **kwargs):
+            pass
+
 
 def test_with_kwarg_only():
     class FooInterface(Interface):
-        def foo(self, a, *, b):
-            pass
-
-    @implements(FooInterface)
-    class FooImplementationPass:
         def foo(self, a, *, b):
             pass
 
@@ -50,6 +45,11 @@ def test_with_kwarg_only():
             def foo(self, a, b):
                 pass
 
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, a, *, b):
+            pass
+
 
 def test_property():
     class FooInterface(Interface):
@@ -57,8 +57,14 @@ def test_property():
         def foo(self):
             pass
 
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(self):
+                pass
+
     @implements(FooInterface)
-    class FooImplementation:
+    class FooImplementationPass:
         @property
         def foo(self):
             pass
@@ -76,10 +82,20 @@ def test_setters():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             @property
             def foo(self):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @property
+        def foo(self):
+            pass
+
+        @foo.setter
+        def foo(self, val):
+            pass
 
 
 def test_deleters():
@@ -94,10 +110,20 @@ def test_deleters():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             @property
             def foo(self):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @property
+        def foo(self):
+            pass
+
+        @foo.deleter
+        def foo(self, val):
+            pass
 
 
 def test_missing_method():
@@ -107,7 +133,12 @@ def test_missing_method():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
+            pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self):
             pass
 
 
@@ -118,9 +149,14 @@ def test_missing_argument():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, arg):
+            pass
 
 
 def test_renamed_argument():
@@ -130,9 +166,14 @@ def test_renamed_argument():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self, arrrrg):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, arg):
+            pass
 
 
 def test_extra_argument():
@@ -142,9 +183,14 @@ def test_extra_argument():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self, arg, ument):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, arg):
+            pass
 
 
 def test_different_defaults():
@@ -154,9 +200,14 @@ def test_different_defaults():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self, arg=8):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, arg=7):
+            pass
 
 
 def test_different_order():
@@ -166,9 +217,14 @@ def test_different_order():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self, b, a):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, a, b):
+            pass
 
 
 def test_missing_kwargs():
@@ -178,9 +234,14 @@ def test_missing_kwargs():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, **kwargs):
+            pass
 
 
 def test_missing_property():
@@ -189,9 +250,21 @@ def test_missing_property():
         def foo(self):
             pass
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(NotImplementedError):    # missing method
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
+            pass
+
+    with pytest.raises(NotImplementedError):    # missing property decorator
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(self):
+                pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @property
+        def foo(self):
             pass
 
 
@@ -202,9 +275,14 @@ def test_bad_constructor():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def __init__(self):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def __init__(self, a):
+            pass
 
 
 def test_static():
@@ -240,15 +318,6 @@ def test_multiple_interfaces():
         def bar(self):
             pass
 
-    @implements(BarInterface)
-    @implements(FooInterface)
-    class FooImplementation:
-        def foo(self):
-            pass
-
-        def bar(self):
-            pass
-
     with pytest.raises(NotImplementedError):
         @implements(BarInterface)
         @implements(FooInterface)
@@ -262,6 +331,15 @@ def test_multiple_interfaces():
         class FooImplementationNoFoo:
             def bar(self, a):
                 pass
+
+    @implements(BarInterface)
+    @implements(FooInterface)
+    class FooImplementation:
+        def foo(self):
+            pass
+
+        def bar(self):
+            pass
 
 
 def test_interface_name_collision():
@@ -289,10 +367,14 @@ def test_interface_name_and_signature_collision():
         def foo(self) -> str:
             return 'foo'
 
+    # Two interfaces with different signatures for a given method will
+    # always result in failure for the implementing class, as the
+    # implemented method's signature can only satisfy one of the interfaces.
+
     with pytest.raises(NotImplementedError):
         @implements(Foo2Interface)
         @implements(Foo1Interface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self):
                 pass
 
@@ -308,9 +390,16 @@ def test_interface_inheritance():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        def foo(self):
+            pass
+        def bar(self):
+            pass
 
 
 def test_class_inheritance():
@@ -324,6 +413,7 @@ def test_class_inheritance():
         def foo(self):
             pass
 
+    @implements(FooInterface)
     class ChildImplementation(ParentImplementation):
         pass
 
@@ -335,9 +425,14 @@ def test_rtn_type_annotation():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self) -> int:
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self) -> str:
+            pass
 
 
 def test_arg_type_annotation():
@@ -347,9 +442,14 @@ def test_arg_type_annotation():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
             def foo(self, arg: int):
                 pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        def foo(self, arg: str):
+            pass
 
 
 def test_classmethods():
@@ -380,16 +480,6 @@ def test_other_decorator_compat():
         def foo(self):
             pass
 
-    @decorator
-    @implements(FooInterface)
-    class FooImplementationPass(object):
-        def __init__(self, x, y):
-            self.x = x
-            self.y = y
-
-        def foo(self):
-            pass
-
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         @decorator
@@ -401,20 +491,30 @@ def test_other_decorator_compat():
             def foo(self):
                 pass
 
+    @decorator
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+
+        def foo(self):
+            pass
+
 
 def test_magic_methods():
     class FooInterface(Interface):
         def __add__(self, other):
             pass
 
-    @implements(FooInterface)
-    class FooImplementationPass(object):
-        def __add__(self, other):
-            pass
-
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail(object):
+            pass
+
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        def __add__(self, other):
             pass
 
 
@@ -422,15 +522,15 @@ def test_attributes():
     class FooInterface(Interface):
         a = None
 
-    @implements(FooInterface)
-    class FooImplementationPass(object):
-        a = 1
-        b = 2
-
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail(object):
             pass
+
+    @implements(FooInterface)
+    class FooImplementationPass(object):
+        a = 1
+        b = 2
 
 
 def test_async():
@@ -464,14 +564,14 @@ def test_new_style_descriptors():
     class FooInterface(Interface):
         int_field = IntField()
 
-    @implements(FooInterface)
-    class FooImplementationPass:
-        int_field = IntField()
-
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
             pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        int_field = IntField()
 
 
 @py36
