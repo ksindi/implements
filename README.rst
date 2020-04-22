@@ -20,7 +20,7 @@ Implements is available on PyPI and can be installed with `pip <https://pip.pypa
 
     pip install implements
     
-Note Python 3.5+ is required as it relies on new features of `inspect` module.
+Note Python 3.6+ is required as it relies on new features of `inspect` module.
 
 Advantages
 ----------
