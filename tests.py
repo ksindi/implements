@@ -403,7 +403,6 @@ def test_interface_inheritance():
 
 
 def test_class_inheritance():
-    # TODO
     class FooInterface(Interface):
         def foo(self):
             pass
@@ -415,6 +414,48 @@ def test_class_inheritance():
 
     @implements(FooInterface)
     class ChildImplementation(ParentImplementation):
+        pass
+
+
+def test_class_multiple_inheritance():
+    # --------- INTERFACES -----------------------------------------------
+    #
+    class FooInterface(Interface):
+        def foo(self, final):
+            pass
+
+    class BarInterface(Interface):
+        def bar(self, final):
+            pass
+
+    class FooBarInterface(FooInterface, BarInterface):
+        pass
+
+    # --------- IMPLEMENTATION -------------------------------------------
+    #
+    class BaseFooImplementation(object):        # must get overridden
+        def foo(self, override, my, args):
+            pass
+
+    @implements(FooInterface)
+    class FooImplementation(BaseFooImplementation):
+        def foo(self, final):
+            pass
+
+    @implements(BarInterface)
+    class BarImplementation(object):
+        def bar(self, final):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooBarInterface)
+        class SubFooImplementation(FooImplementation):  # foo, no bar
+            pass
+
+    @implements(FooInterface)
+    @implements(BarInterface)
+    @implements(FooBarInterface)
+    class FooBarImplementation(FooImplementation, BarImplementation):
         pass
 
 
