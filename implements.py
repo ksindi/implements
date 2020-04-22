@@ -42,7 +42,7 @@ def verify_methods(interface_cls, cls):
         cls_signature = inspect.signature(cls_method) if cls_method else None
         if cls_signature != signature:
             raise NotImplementedError(
-                "'{}' must implement method '{}({})' defined in interface '{}'"
+                "'{}' must implement method '{}{}' defined in interface '{}'"
                 .format(cls.__name__, name, signature, interface_cls.__name__)
             )
 
