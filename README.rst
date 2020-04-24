@@ -4,9 +4,6 @@ Implements
 .. image:: https://travis-ci.org/ksindi/implements.svg?branch=master
     :target: https://travis-ci.org/ksindi/ksindi/implements
     :alt: Build Status
-.. image:: https://readthedocs.org/projects/implements/badge/?version=v0.1.1
-    :target: http://implements.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
 .. image:: https://img.shields.io/pypi/v/implements.svg
     :target: https://pypi.python.org/pypi/implements
     :alt: PyPI Version
@@ -19,7 +16,7 @@ Install
 Implements is available on PyPI and can be installed with `pip <https://pip.pypa.io>`_::
 
     pip install implements
-    
+
 Note Python 3.6+ is required as it relies on new features of `inspect` module.
 
 Advantages
@@ -216,4 +213,4 @@ Running tox::
 License
 -------
 
-MIT
+Apache License v2
