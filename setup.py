@@ -37,7 +37,7 @@ if __name__ == '__main__':
         classifiers=textwrap.dedent("""
             Development Status :: 5 - Production/Stable
             Intended Audience :: Developers
-            License :: OSI Approved :: MIT License
+            License :: OSI Approved :: Apache Software License
             Natural Language :: English
             Programming Language :: Python :: 3
             Programming Language :: Python :: 3.6
@@ -45,5 +45,5 @@ if __name__ == '__main__':
             Programming Language :: Python :: 3.8
             """).strip().splitlines(),
         keywords=['implements', 'interfaces'],
-        license='MIT',
+        license='Apache License, Version 2.0',
     )
