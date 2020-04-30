@@ -83,6 +83,20 @@ def test_property():
             pass
 
 
+@pytest.mark.xfail(reason="callable(cls_method) is False with @property")
+def test_property_inverse():
+    class FooInterface(Interface):
+        def foo(self):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @property
+            def foo(self):
+                pass
+
+
 def test_setters():
     class FooInterface(Interface):
         @property
