@@ -83,7 +83,6 @@ def test_property():
             pass
 
 
-@pytest.mark.xfail(reason="callable(cls_method) is False with @property")
 def test_property_inverse():
     class FooInterface(Interface):
         def foo(self):

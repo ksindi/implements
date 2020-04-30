@@ -49,7 +49,9 @@ def verify_methods(interface_cls, cls):
     for name, method in inspect.getmembers(interface_cls, methods_predicate):
         signature = inspect.signature(method)
         cls_method = getattr(cls, name, None)
-        cls_signature = inspect.signature(cls_method) if cls_method else None
+        cls_signature = None
+        if cls_method and callable(cls_method):
+            cls_signature = inspect.signature(cls_method)
         if cls_signature != signature:
             raise NotImplementedError(
                 "'{}' must implement method '{}{}' defined in interface '{}'"
