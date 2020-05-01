@@ -416,6 +416,36 @@ def test_classmethod_signature_match():
                 pass
 
 
+def test_staticmethod_classmethod_with_decorator():
+    class FooBarInterface(Interface):
+        @staticmethod
+        def foo(a, b, c):
+            pass
+
+        @classmethod
+        def bar(cls, a, b, c):
+            pass
+
+    import functools
+    def decorator(func):
+        @functools.wraps(func)
+        def inner(*args, **kwargs):
+            return func(*args, **kwargs)
+        return inner
+
+    @implements(FooBarInterface)
+    class FooBarImplementationPass:
+        @staticmethod
+        @decorator
+        def foo(a, b, c):
+            pass
+
+        @classmethod
+        @decorator
+        def bar(cls, a, b, c):
+            pass
+
+
 def test_kwargs_only():
     class FooInterface(Interface):
         def foo(self, *, a):
