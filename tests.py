@@ -311,7 +311,6 @@ def test_bad_constructor():
             pass
 
 
-@pytest.mark.xfail(reason="https://github.com/ksindi/implements/issues/11")
 def test_static():
     class FooInterface(Interface):
         @staticmethod
@@ -350,7 +349,6 @@ def test_static():
             pass
 
 
-@pytest.mark.xfail(reason="https://github.com/ksindi/implements/issues/11")
 def test_classmethods():
     class FooInterface(Interface):
         @classmethod
@@ -389,7 +387,6 @@ def test_classmethods():
             pass
 
 
-@pytest.mark.xfail(reason="https://github.com/ksindi/implements/issues/11")
 def test_classmethod_signature_match():
     # For a classmethod, inspect.signature returns a signature with the first
     # element (cls) stripped. A classmethod with signature (cls, a, b, c) has
