@@ -389,6 +389,36 @@ def test_classmethods():
             pass
 
 
+@pytest.mark.xfail(reason="https://github.com/ksindi/implements/issues/11")
+def test_classmethod_signature_match():
+    # For a classmethod, inspect.signature returns a signature with the first
+    # element (cls) stripped. A classmethod with signature (cls, a, b, c) has
+    # signature equivalence with a regular method with signature (a, b, c)
+    #
+    # Example:
+    from inspect import signature
+    class TestA:
+        @classmethod
+        def foo(cls, a, b, c):
+            pass
+    class TestB:
+        def foo(a, b, c):
+            pass
+    assert signature(TestA.foo) == signature(TestB.foo)
+
+    # The test below ensures that the above case is flagged
+    class FooInterface(Interface):
+        @classmethod
+        def foo(cls, a, b, c):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(a, b, c):
+                pass
+
+
 def test_kwargs_only():
     class FooInterface(Interface):
         def foo(self, *, a):
