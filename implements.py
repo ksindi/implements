@@ -14,6 +14,7 @@
 
 import inspect
 import types
+import sys
 
 from pkg_resources import get_distribution, DistributionNotFound
 
@@ -52,7 +53,11 @@ def getobj_via_dict(cls, name):
 
 
 def is_classmethod(obj):
-    return isinstance(obj, (classmethod, types.ClassMethodDescriptorType))
+    if sys.version_info < (3, 7):
+        clsmethod_ident = classmethod
+    else:
+        clsmethod_ident = (classmethod, types.ClassMethodDescriptorType)
+    return isinstance(obj, clsmethod_ident)
 
 
 def is_staticmethod(obj):
