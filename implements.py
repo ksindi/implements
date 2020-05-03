@@ -50,6 +50,7 @@ def getobj_via_dict(cls, name):
     for c in cls.__mro__:
         if name in c.__dict__:
             return c.__dict__[name]
+    return None
 
 
 def is_classmethod(obj):
