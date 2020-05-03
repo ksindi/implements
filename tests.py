@@ -83,6 +83,19 @@ def test_property():
             pass
 
 
+def test_property_inverse():
+    class FooInterface(Interface):
+        def foo(self):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @property
+            def foo(self):
+                pass
+
+
 def test_setters():
     class FooInterface(Interface):
         @property
@@ -301,12 +314,135 @@ def test_bad_constructor():
 def test_static():
     class FooInterface(Interface):
         @staticmethod
-        def foo():
+        def foo(a, b, c):
             pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementation:
+        class FooImplementationFail:
+            pass                    # missing foo
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(a, b, c):       # missing staticmethod decorator
+                pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @classmethod            # classmethod instead of staticmethod
+            def foo(cls, a, b, c):  # decorator-check fails before signature
+                pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @staticmethod
+            def foo(m, n, o):       # staticmethod, but wrong signature
+                pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @staticmethod
+        def foo(a, b, c):
+            pass
+
+
+def test_classmethods():
+    class FooInterface(Interface):
+        @classmethod
+        def foo(cls, a, b, c):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            pass                    # missing foo
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(cls, a, b, c):  # missing classmethod decorator
+                pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @staticmethod           # staticmethod instead of classmethod
+            def foo(a, b, c):       # decorator-check fails before signature
+                pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @classmethod
+            def foo(cls, m, n, o):   # classmethod, but wrong signature
+                pass
+
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @classmethod
+        def foo(cls, a, b, c):
+            pass
+
+
+def test_classmethod_signature_match():
+    # For a classmethod, inspect.signature returns a signature with the first
+    # element (cls) stripped. A classmethod with signature (cls, a, b, c) has
+    # signature equivalence with a regular method with signature (a, b, c)
+    #
+    # Example:
+    from inspect import signature
+    class TestA:
+        @classmethod
+        def foo(cls, a, b, c):
+            pass
+    class TestB:
+        def foo(a, b, c):
+            pass
+    assert signature(TestA.foo) == signature(TestB.foo)
+
+    # The test below ensures that the above case is flagged
+    class FooInterface(Interface):
+        @classmethod
+        def foo(cls, a, b, c):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def foo(a, b, c):
+                pass
+
+
+def test_staticmethod_classmethod_with_decorator():
+    class FooBarInterface(Interface):
+        @staticmethod
+        def foo(a, b, c):
+            pass
+
+        @classmethod
+        def bar(cls, a, b, c):
+            pass
+
+    import functools
+    def decorator(func):
+        @functools.wraps(func)
+        def inner(*args, **kwargs):
+            return func(*args, **kwargs)
+        return inner
+
+    @implements(FooBarInterface)
+    class FooBarImplementationPass:
+        @staticmethod
+        @decorator
+        def foo(a, b, c):
+            pass
+
+        @classmethod
+        @decorator
+        def bar(cls, a, b, c):
             pass
 
 
@@ -503,18 +639,6 @@ def test_arg_type_annotation():
     @implements(FooInterface)
     class FooImplementationPass:
         def foo(self, arg: str):
-            pass
-
-
-def test_classmethods():
-    class FooInterface(Interface):
-        @classmethod
-        def foo(cls):
-            pass
-
-    with pytest.raises(NotImplementedError):
-        @implements(FooInterface)
-        class FooImplementation:
             pass
 
 
