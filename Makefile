@@ -26,10 +26,10 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 build: clean-build
-	python setup.py build_ext --inplace
+	python3 setup.py build_ext --inplace
 
 install: clean-build
-	python setup.py install
+	python3 setup.py install
 
 install-all:
 	pip install -e .[all]
@@ -38,13 +38,13 @@ lint:
 	pytest --flake8 implements.py tests.py
 
 test:
-	python setup.py test
+	python3 setup.py test
 
 test-all:
 	tox
 
 version:
-	python setup.py --version
+	python3 setup.py --version
 
 coverage:
 	coverage run --source implements setup.py test
@@ -61,10 +61,10 @@ docs:
 	xdg-open docs/_build/html/index.html
 
 release: clean build
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
+	python3 setup.py sdist upload
+	python3 setup.py bdist_wheel upload
 
 dist: clean build
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
 	ls -l dist
