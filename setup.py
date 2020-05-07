@@ -7,6 +7,23 @@ from setuptools import setup
 with open('README.rst') as f:
     readme = f.read()
 
+_INSTALL_REQUIRES=[
+            'setuptools_scm>=1.15.0',
+]
+_SETUP_REQUIRES=[
+            'setuptools>=18.0',
+            'pytest-runner',
+            'setuptools_scm>=1.15.0',
+            'sphinx_rtd_theme',
+]
+_TEST_REQUIRES=[
+            'pytest',
+            'pytest-flake8',
+]
+_ALL_PACKAGES=list()
+_ALL_PACKAGES.extend(_SETUP_REQUIRES)
+_ALL_PACKAGES.extend(_TEST_REQUIRES)
+
 if __name__ == '__main__':
     setup(
         name='implements',
@@ -18,19 +35,10 @@ if __name__ == '__main__':
         author_email='ksindi@ksindi.com',
         maintainer='Kamil Sindi',
         maintainer_email='ksindi@ksindi.com',
-        install_requires=[
-            'setuptools_scm>=1.15.0',
-        ],
-        setup_requires=[
-            'setuptools>=18.0',
-            'pytest-runner',
-            'setuptools_scm>=1.15.0',
-            'sphinx_rtd_theme',
-        ],
-        tests_require=[
-            'pytest',
-            'pytest-flake8',
-        ],
+        install_requires=_INSTALL_REQUIRES,
+        setup_requires=_SETUP_REQUIRES,
+        tests_require=_TEST_REQUIRES,
+        all_packages=_ALL_PACKAGES,
         zip_safe=False,
         include_package_data=True,
         py_modules=['implements'],

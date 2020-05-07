@@ -51,7 +51,7 @@ install: clean-build
 
 .PHONY: install-all
 install-all:
-	pip install -e .[all]
+	pip install -e .[all_packages]
 
 .PHONY: lint
 lint:
