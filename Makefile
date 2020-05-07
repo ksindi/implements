@@ -3,6 +3,8 @@
 help:
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
+	@echo "clean-test - remove pytest cache"
+	@echo "clean-cov - remove coverage artifacts"
 	@echo "build - build so file from pyx"
 	@echo "lint - check style with flake8"
 	@echo "test - run tests quickly with the default Python"
@@ -12,8 +14,7 @@ help:
 	@echo "release - package and upload a release"
 	@echo "dist - package"
 
-clean: clean-build clean-pyc
-	rm -rf htmlcov/
+clean: clean-build clean-pyc clean-test clean-cov
 
 clean-build:
 	rm -rf build/
@@ -24,6 +25,14 @@ clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
+
+clean-test:
+	rm -rf __pycache__/
+	rm -rf .pytest_cache/
+
+clean-cov:
+	rm -rf .coverage/
+	rm -rf htmlcov/
 
 build: clean-build
 	python3 setup.py build_ext --inplace
