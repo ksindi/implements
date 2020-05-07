@@ -772,3 +772,4 @@ def test_new_style_metaclasses():
     class Triangle(Polygon, sides=3):
         def rotate(self):
             pass
+

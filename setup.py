@@ -20,7 +20,7 @@ _TEST_REQUIRES = [
             'pytest',
             'pytest-flake8',
 ]
-_ALL_PACKAGES=[]
+_ALL_PACKAGES = []
 _ALL_PACKAGES.extend(_SETUP_REQUIRES)
 _ALL_PACKAGES.extend(_TEST_REQUIRES)
 

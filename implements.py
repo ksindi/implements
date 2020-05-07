@@ -125,3 +125,4 @@ def get_attributes(cls):
     boring = dir(type('dummy', (object,), {}))
     return set(item[0] for item in inspect.getmembers(cls)
                if item[0] not in boring and not callable(item[1]))
+
