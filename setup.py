@@ -7,20 +7,20 @@ from setuptools import setup
 with open('README.rst') as f:
     readme = f.read()
 
-_INSTALL_REQUIRES=[
+_INSTALL_REQUIRES = [
             'setuptools_scm>=1.15.0',
 ]
-_SETUP_REQUIRES=[
+_SETUP_REQUIRES = [
             'setuptools>=18.0',
             'pytest-runner',
             'setuptools_scm>=1.15.0',
             'sphinx_rtd_theme',
 ]
-_TEST_REQUIRES=[
+_TEST_REQUIRES = [
             'pytest',
             'pytest-flake8',
 ]
-_ALL_PACKAGES=list()
+_ALL_PACKAGES=[]
 _ALL_PACKAGES.extend(_SETUP_REQUIRES)
 _ALL_PACKAGES.extend(_TEST_REQUIRES)
 
