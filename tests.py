@@ -32,18 +32,18 @@ def test_empty():
 
 def test_with_args_kwargs():
     class FooInterface(Interface):
-        def foo(self, a, b=1, *args, **kwargs):
+        def foo(self, a, *args, b=1, **kwargs):
             pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
-            def foo(self, a, b=7, *args):
+            def foo(self, a, *args, b=7):
                 pass
 
     @implements(FooInterface)
     class FooImplementationPass:
-        def foo(self, a, b=1, *args, **kwargs):
+        def foo(self, a, *args, b=1, **kwargs):
             pass
 
 
