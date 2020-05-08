@@ -278,12 +278,12 @@ def test_missing_property():
 
     with pytest.raises(NotImplementedError):    # missing method
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail1:
             pass
 
     with pytest.raises(NotImplementedError):    # missing property decorator
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail2:
             def foo(self):
                 pass
 
@@ -319,25 +319,25 @@ def test_static():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail1:
             pass                    # missing foo
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail2:
             def foo(a, b, c):       # missing staticmethod decorator
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail3:
             @classmethod            # classmethod instead of staticmethod
             def foo(cls, a, b, c):  # decorator-check fails before signature
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail4:
             @staticmethod
             def foo(m, n, o):       # staticmethod, but wrong signature
                 pass
@@ -357,25 +357,25 @@ def test_classmethods():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail1:
             pass                    # missing foo
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail2:
             def foo(cls, a, b, c):  # missing classmethod decorator
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail3:
             @staticmethod           # staticmethod instead of classmethod
             def foo(a, b, c):       # decorator-check fails before signature
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail4:
             @classmethod
             def foo(cls, m, n, o):   # classmethod, but wrong signature
                 pass
