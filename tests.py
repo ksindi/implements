@@ -325,6 +325,7 @@ def test_static():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail2:
+            # skipcq: PYL-E0213
             def foo(a, b, c):       # missing staticmethod decorator
                 pass
 
@@ -363,6 +364,7 @@ def test_classmethods():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail2:
+            # skipcq: PYL-E0213
             def foo(cls, a, b, c):  # missing classmethod decorator
                 pass
 
@@ -401,6 +403,7 @@ def test_classmethod_signature_match():
             pass
 
     class TestB:
+        # skipcq: PYL-E0213
         def foo(a, b, c):
             pass
 
@@ -415,6 +418,7 @@ def test_classmethod_signature_match():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
+            # skipcq: PYL-E0213
             def foo(a, b, c):
                 pass
 
