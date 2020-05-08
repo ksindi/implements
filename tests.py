@@ -394,13 +394,16 @@ def test_classmethod_signature_match():
     #
     # Example:
     from inspect import signature
+
     class TestA:
         @classmethod
         def foo(cls, a, b, c):
             pass
+
     class TestB:
         def foo(a, b, c):
             pass
+
     assert signature(TestA.foo) == signature(TestB.foo)
 
     # The test below ensures that the above case is flagged
@@ -427,6 +430,7 @@ def test_staticmethod_classmethod_with_decorator():
             pass
 
     import functools
+
     def decorator(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
@@ -547,6 +551,7 @@ def test_interface_inheritance():
     class FooImplementationPass(object):
         def foo(self):
             pass
+
         def bar(self):
             pass
 
