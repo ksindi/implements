@@ -37,6 +37,9 @@ class Interface:
 
 
 def implements(interface_cls):
+    '''Verifies whether the decorated class implements the interface as
+    defined by the `interface_cls`.
+    '''
     def _decorator(cls):
         verify_methods(interface_cls, cls)
         verify_properties(interface_cls, cls)
@@ -122,7 +125,7 @@ def verify_properties(interface_cls, cls):
 def verify_attributes(interface_cls, cls):
     interface_attributes = get_attributes(interface_cls)
     cls_attributes = get_attributes(cls)
-    for missing_attr in (interface_attributes - cls_attributes):
+    for missing_attr in interface_attributes - cls_attributes:
         raise NotImplementedError(
             "'{}' must have class attribute '{}' defined in interface '{}'"
             .format(cls.__name__, missing_attr, interface_cls.__name__)
@@ -131,5 +134,5 @@ def verify_attributes(interface_cls, cls):
 
 def get_attributes(cls):
     boring = dir(type('dummy', (object,), {}))
-    return set(item[0] for item in inspect.getmembers(cls)
+    return set(item[0] for item in inspect.getmembers(cls)  # skipcq: PTC-W0015
                if item[0] not in boring and not callable(item[1]))
