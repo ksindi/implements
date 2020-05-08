@@ -7,30 +7,43 @@ from setuptools import setup
 with open('README.rst') as f:
     readme = f.read()
 
+_DESCRIPTION = '''Pythonic interfaces.
+
+Decorate your implementation class with `@implements(<InterfaceClass>)`.
+Thats it!. `implements` will ensure that your implementation satisfies
+attributes, methods and their signatures as defined in your interface.
+
+Whats more? Interfaces are enforced via composition. Implementations
+don't inherit interfaces. Your MROs remain untouched. And, interfaces
+are evaluated during import, not class instantiation. So, errors are
+raised early!
+'''
+
+_AUTHORS = ('Kamil Sindi <ksindi@ksindi.com>, '
+            'Praveen G shirali <praveengshirali@gmail.com')
+
+_INSTALL_REQUIRES = ['setuptools_scm>=1.15.0']
+_SETUP_REQUIRES = ['setuptools>=18.0', 'pytest-runner',
+                   'setuptools_scm>=1.15.0', 'sphinx_rtd_theme']
+_TEST_REQUIRES = ['pytest', 'pytest-flake8']
+_ALL_PACKAGES = []
+_ALL_PACKAGES.extend(_SETUP_REQUIRES)
+_ALL_PACKAGES.extend(_TEST_REQUIRES)
+
 if __name__ == '__main__':
     setup(
         name='implements',
-        description='pythonic interfaces',
+        description=_DESCRIPTION,
         long_description=readme,
         url='http://implements.readthedocs.io',
         use_scm_version=True,
-        author='Kamil Sindi',
-        author_email='ksindi@ksindi.com',
+        author=_AUTHORS,
         maintainer='Kamil Sindi',
         maintainer_email='ksindi@ksindi.com',
-        install_requires=[
-            'setuptools_scm>=1.15.0',
-        ],
-        setup_requires=[
-            'setuptools>=18.0',
-            'pytest-runner',
-            'setuptools_scm>=1.15.0',
-            'sphinx_rtd_theme',
-        ],
-        tests_require=[
-            'pytest',
-            'pytest-flake8',
-        ],
+        install_requires=_INSTALL_REQUIRES,
+        setup_requires=_SETUP_REQUIRES,
+        tests_require=_TEST_REQUIRES,
+        all_packages=_ALL_PACKAGES,
         zip_safe=False,
         include_package_data=True,
         py_modules=['implements'],

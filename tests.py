@@ -32,18 +32,18 @@ def test_empty():
 
 def test_with_args_kwargs():
     class FooInterface(Interface):
-        def foo(self, a, b=1, *args, **kwargs):
+        def foo(self, a, *args, b=1, **kwargs):
             pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
-            def foo(self, a, b=7, *args):
+            def foo(self, a, *args, b=7):
                 pass
 
     @implements(FooInterface)
     class FooImplementationPass:
-        def foo(self, a, b=1, *args, **kwargs):
+        def foo(self, a, *args, b=1, **kwargs):
             pass
 
 
@@ -278,12 +278,12 @@ def test_missing_property():
 
     with pytest.raises(NotImplementedError):    # missing method
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail1:           # skipcq: PYL-W0612
             pass
 
     with pytest.raises(NotImplementedError):    # missing property decorator
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail2:           # skipcq: PYL-W0612
             def foo(self):
                 pass
 
@@ -319,25 +319,26 @@ def test_static():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail1:           # skipcq: PYL-W0612
             pass                    # missing foo
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail2:           # skipcq: PYL-W0612
+            # skipcq: PYL-E0213
             def foo(a, b, c):       # missing staticmethod decorator
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail3:           # skipcq: PYL-W0612
             @classmethod            # classmethod instead of staticmethod
             def foo(cls, a, b, c):  # decorator-check fails before signature
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail4:           # skipcq: PYL-W0612
             @staticmethod
             def foo(m, n, o):       # staticmethod, but wrong signature
                 pass
@@ -357,25 +358,26 @@ def test_classmethods():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail1:           # skipcq: PYL-W0612
             pass                    # missing foo
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail2:           # skipcq: PYL-W0612
+            # skipcq: PYL-E0213
             def foo(cls, a, b, c):  # missing classmethod decorator
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail3:           # skipcq: PYL-W0612
             @staticmethod           # staticmethod instead of classmethod
             def foo(a, b, c):       # decorator-check fails before signature
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail4:           # skipcq: PYL-W0612
             @classmethod
             def foo(cls, m, n, o):   # classmethod, but wrong signature
                 pass
@@ -394,13 +396,17 @@ def test_classmethod_signature_match():
     #
     # Example:
     from inspect import signature
+
     class TestA:
         @classmethod
         def foo(cls, a, b, c):
             pass
+
     class TestB:
+        # skipcq: PYL-E0213
         def foo(a, b, c):
             pass
+
     assert signature(TestA.foo) == signature(TestB.foo)
 
     # The test below ensures that the above case is flagged
@@ -412,6 +418,7 @@ def test_classmethod_signature_match():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         class FooImplementationFail:
+            # skipcq: PYL-E0213
             def foo(a, b, c):
                 pass
 
@@ -427,6 +434,7 @@ def test_staticmethod_classmethod_with_decorator():
             pass
 
     import functools
+
     def decorator(func):
         @functools.wraps(func)
         def inner(*args, **kwargs):
@@ -544,9 +552,10 @@ def test_interface_inheritance():
                 pass
 
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         def foo(self):
             pass
+
         def bar(self):
             pass
 
@@ -582,17 +591,17 @@ def test_class_multiple_inheritance():
 
     # --------- IMPLEMENTATION -------------------------------------------
     #
-    class BaseFooImplementation(object):        # must get overridden
+    class BaseFooImplementation:        # must get overridden
         def foo(self, override, my, args):
             pass
 
     @implements(FooInterface)
     class FooImplementation(BaseFooImplementation):
-        def foo(self, final):
+        def foo(self, final):           # skipcq: PYL-W0221
             pass
 
     @implements(BarInterface)
-    class BarImplementation(object):
+    class BarImplementation:
         def bar(self, final):
             pass
 
@@ -644,13 +653,13 @@ def test_arg_type_annotation():
 
 def test_other_decorator_compat():
     def decorator(cls):
-        class Wrapper(object):
+        class Wrapper:
             def __init__(self, *args):
                 self.wrapped = cls(*args)
 
             def __getattr__(self, name):
                 print('Getting the {} of {}'.format(name, self.wrapped))
-                return getattr(self.wrapped, name)
+                return getattr(self.wrapped, name, None)
 
         return Wrapper
 
@@ -661,7 +670,7 @@ def test_other_decorator_compat():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         @decorator
-        class FooImplementationFail(object):
+        class FooImplementationFail:
             def __init__(self, x, y):
                 self.x = x
                 self.y = y
@@ -671,7 +680,7 @@ def test_other_decorator_compat():
 
     @decorator
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         def __init__(self, x, y):
             self.x = x
             self.y = y
@@ -687,11 +696,11 @@ def test_magic_methods():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail(object):
+        class FooImplementationFail:
             pass
 
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         def __add__(self, other):
             pass
 
@@ -702,11 +711,11 @@ def test_attributes():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail(object):
+        class FooImplementationFail:
             pass
 
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         a = 1
         b = 2
 
@@ -737,7 +746,7 @@ def test_new_style_descriptors():
             instance.__dict__[self.name] = value
 
         def __set_name__(self, owner, name):
-            self.name = name
+            self.name = name                            # skipcq: PYL-W0201
 
     class FooInterface(Interface):
         int_field = IntField()
