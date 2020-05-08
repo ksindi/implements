@@ -66,7 +66,9 @@ def is_staticmethod(obj):
 
 
 def verify_methods(interface_cls, cls):
-    methods_predicate = lambda m: inspect.isfunction(m) or inspect.ismethod(m)
+    def methods_predicate(m):
+        return inspect.isfunction(m) or inspect.ismethod(m)
+
     for name, method in inspect.getmembers(interface_cls, methods_predicate):
         signature = inspect.signature(method)
         cls_method = getattr(cls, name, None)
@@ -100,14 +102,20 @@ def verify_methods(interface_cls, cls):
 
 def verify_properties(interface_cls, cls):
     prop_attrs = dict(fget='getter', fset='setter', fdel='deleter')
-    for name, prop in inspect.getmembers(interface_cls, inspect.isdatadescriptor):
+    descriptors = inspect.getmembers(interface_cls, inspect.isdatadescriptor)
+    for name, prop in descriptors:
         cls_prop = getattr(cls, name, None)
         for attr in prop_attrs:
             # instanceof doesn't work for class function comparison
-            if type(getattr(prop, attr, None)) != type(getattr(cls_prop, attr, None)):
+            ifc_prop_type = type(getattr(prop, attr, None))
+            cls_prop_type = type(getattr(cls_prop, attr, None))
+            if ifc_prop_type != cls_prop_type:
+                cls_name = cls.__name__
+                ifc_name = interface_cls.__name__
+                proptype = prop_attrs[attr]
                 raise NotImplementedError(
-                    "'{}' must implement a {} for property '{}' defined in interface '{}'"  # flake8: noqa
-                    .format(cls.__name__, prop_attrs[attr], name, interface_cls.__name__)
+                    "'{}' must implement a {} for property '{}' defined in "
+                    "interface '{}'".format(cls_name, proptype, name, ifc_name)
                 )
 
 
