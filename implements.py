@@ -18,16 +18,19 @@ import sys
 
 from pkg_resources import get_distribution, DistributionNotFound
 
+
 __title__ = 'implements'
-__author__ = 'Kamil Sindi'
+__author__ = ('Kamil Sindi <ksindi@ksindi.com>, '
+              'Praveen G Shirali <praveengshirali@gmail.com>')
 __license__ = 'Apache License, Version 2.0'
-__email__ = 'ksindi@ksindi.com'
+
 
 try:
     __version__ = get_distribution(__name__).version
 except DistributionNotFound:
     # package is not installed
     pass
+
 
 __all__ = ['Interface', 'implements']
 
