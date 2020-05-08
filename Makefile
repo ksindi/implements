@@ -1,9 +1,11 @@
 help:
 	@echo "clean - clean build, pyc, test, coverage"
+	@echo "clean-all - clean build, pyc, test, coverage, eggs"
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "clean-test - remove pytest cache"
 	@echo "clean-cov - remove coverage artifacts"
+	@echo "clean-eggs - remove cached eggs"
 	@echo "build - build so file from pyx"
 	@echo "install - install implements and dependencies"
 	@echo "install-all - install implements, dependencies and dev packages"
@@ -18,6 +20,9 @@ help:
 
 .PHONY: clean
 clean: clean-build clean-pyc clean-test clean-cov
+
+.PHONY: clean
+clean-all: clean clean-eggs
 
 .PHONY: clean-build
 clean-build:
@@ -38,15 +43,19 @@ clean-test:
 
 .PHONY: clean-cov
 clean-cov:
-	rm -rf .coverage/
+	rm -f .coverage
 	rm -rf htmlcov/
 
+.PHONY: clean-eggs
+clean-eggs:
+	rm -rf .eggs/
+
 .PHONY: build
-build: clean-build
+build: clean-build clean-eggs
 	python3 setup.py build_ext --inplace
 
 .PHONY: install
-install: clean-build
+install: clean-build clean-eggs
 	python3 setup.py install
 
 .PHONY: install-all
