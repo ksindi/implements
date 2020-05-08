@@ -6,6 +6,7 @@ test_patterns = [
 
 exclude_patterns = [
   "docs/*.py"
+  "example*.py"
 ]
 
 [[analyzers]]
