@@ -552,7 +552,7 @@ def test_interface_inheritance():
                 pass
 
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         def foo(self):
             pass
 
@@ -591,7 +591,7 @@ def test_class_multiple_inheritance():
 
     # --------- IMPLEMENTATION -------------------------------------------
     #
-    class BaseFooImplementation(object):        # must get overridden
+    class BaseFooImplementation:        # must get overridden
         def foo(self, override, my, args):
             pass
 
@@ -601,7 +601,7 @@ def test_class_multiple_inheritance():
             pass
 
     @implements(BarInterface)
-    class BarImplementation(object):
+    class BarImplementation:
         def bar(self, final):
             pass
 
@@ -653,7 +653,7 @@ def test_arg_type_annotation():
 
 def test_other_decorator_compat():
     def decorator(cls):
-        class Wrapper(object):
+        class Wrapper:
             def __init__(self, *args):
                 self.wrapped = cls(*args)
 
@@ -670,7 +670,7 @@ def test_other_decorator_compat():
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
         @decorator
-        class FooImplementationFail(object):
+        class FooImplementationFail:
             def __init__(self, x, y):
                 self.x = x
                 self.y = y
@@ -680,7 +680,7 @@ def test_other_decorator_compat():
 
     @decorator
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         def __init__(self, x, y):
             self.x = x
             self.y = y
@@ -696,11 +696,11 @@ def test_magic_methods():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail(object):
+        class FooImplementationFail:
             pass
 
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         def __add__(self, other):
             pass
 
@@ -711,11 +711,11 @@ def test_attributes():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail(object):
+        class FooImplementationFail:
             pass
 
     @implements(FooInterface)
-    class FooImplementationPass(object):
+    class FooImplementationPass:
         a = 1
         b = 2
 
