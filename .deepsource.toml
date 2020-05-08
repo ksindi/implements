@@ -5,7 +5,7 @@ test_patterns = [
 ]
 
 exclude_patterns = [
-  "docs/*.py"
+  "docs/*.py",
   "example*.py"
 ]
 
