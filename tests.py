@@ -597,7 +597,7 @@ def test_class_multiple_inheritance():
 
     @implements(FooInterface)
     class FooImplementation(BaseFooImplementation):
-        def foo(self, final):
+        def foo(self, final):           # skipcq: PYL-W0221
             pass
 
     @implements(BarInterface)
@@ -659,7 +659,7 @@ def test_other_decorator_compat():
 
             def __getattr__(self, name):
                 print('Getting the {} of {}'.format(name, self.wrapped))
-                return getattr(self.wrapped, name)
+                return getattr(self.wrapped, name, None)
 
         return Wrapper
 
@@ -746,7 +746,7 @@ def test_new_style_descriptors():
             instance.__dict__[self.name] = value
 
         def __set_name__(self, owner, name):
-            self.name = name
+            self.name = name                            # skipcq: PYL-W0201
 
     class FooInterface(Interface):
         int_field = IntField()
