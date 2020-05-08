@@ -278,12 +278,12 @@ def test_missing_property():
 
     with pytest.raises(NotImplementedError):    # missing method
         @implements(FooInterface)
-        class FooImplementationFail1:
+        class FooImplementationFail1:           # skipcq: PYL-W0612
             pass
 
     with pytest.raises(NotImplementedError):    # missing property decorator
         @implements(FooInterface)
-        class FooImplementationFail2:
+        class FooImplementationFail2:           # skipcq: PYL-W0612
             def foo(self):
                 pass
 
@@ -319,26 +319,26 @@ def test_static():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail1:
+        class FooImplementationFail1:           # skipcq: PYL-W0612
             pass                    # missing foo
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail2:
+        class FooImplementationFail2:           # skipcq: PYL-W0612
             # skipcq: PYL-E0213
             def foo(a, b, c):       # missing staticmethod decorator
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail3:
+        class FooImplementationFail3:           # skipcq: PYL-W0612
             @classmethod            # classmethod instead of staticmethod
             def foo(cls, a, b, c):  # decorator-check fails before signature
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail4:
+        class FooImplementationFail4:           # skipcq: PYL-W0612
             @staticmethod
             def foo(m, n, o):       # staticmethod, but wrong signature
                 pass
@@ -358,26 +358,26 @@ def test_classmethods():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail1:
+        class FooImplementationFail1:           # skipcq: PYL-W0612
             pass                    # missing foo
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail2:
+        class FooImplementationFail2:           # skipcq: PYL-W0612
             # skipcq: PYL-E0213
             def foo(cls, a, b, c):  # missing classmethod decorator
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail3:
+        class FooImplementationFail3:           # skipcq: PYL-W0612
             @staticmethod           # staticmethod instead of classmethod
             def foo(a, b, c):       # decorator-check fails before signature
                 pass
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail4:
+        class FooImplementationFail4:           # skipcq: PYL-W0612
             @classmethod
             def foo(cls, m, n, o):   # classmethod, but wrong signature
                 pass
