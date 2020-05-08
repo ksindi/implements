@@ -40,9 +40,9 @@ class Interface:
 
 
 def implements(interface_cls):
-    '''Verifies whether the decorated class implements the interface as
+    """Verifies whether the decorated class implements the interface as
     defined by the `interface_cls`.
-    '''
+    """
     def _decorator(cls):
         verify_methods(interface_cls, cls)
         verify_properties(interface_cls, cls)

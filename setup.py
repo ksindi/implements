@@ -24,7 +24,7 @@ _AUTHORS = ('Kamil Sindi <ksindi@ksindi.com>, '
 
 _INSTALL_REQUIRES = ['setuptools_scm>=1.15.0']
 _SETUP_REQUIRES = ['setuptools>=18.0', 'pytest-runner',
-                 'setuptools_scm>=1.15.0', 'sphinx_rtd_theme']
+                   'setuptools_scm>=1.15.0', 'sphinx_rtd_theme']
 _TEST_REQUIRES = ['pytest', 'pytest-flake8']
 _ALL_PACKAGES = []
 _ALL_PACKAGES.extend(_SETUP_REQUIRES)
