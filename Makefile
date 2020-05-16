@@ -96,7 +96,7 @@ docs:
 
 .PHONY: release
 release: clean build
-	python setup.py sdist bdist_wheel
+	python3 setup.py sdist bdist_wheel
 	twine upload dist/*
 
 .PHONY: dist
