@@ -7,17 +7,8 @@ from setuptools import setup
 with open('README.rst') as f:
     readme = f.read()
 
-_DESCRIPTION = '''Pythonic interfaces.
 
-Decorate your implementation class with `@implements(<InterfaceClass>)`.
-Thats it!. `implements` will ensure that your implementation satisfies
-attributes, methods and their signatures as defined in your interface.
-
-Whats more? Interfaces are enforced via composition. Implementations
-don't inherit interfaces. Your MROs remain untouched. And, interfaces
-are evaluated during import, not class instantiation. So, errors are
-raised early!
-'''
+_DESCRIPTION = 'Pythonic interfaces using decorators'
 
 _AUTHORS = ('Kamil Sindi <ksindi@ksindi.com>, '
             'Praveen G shirali <praveengshirali@gmail.com')

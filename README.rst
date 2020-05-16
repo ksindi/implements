@@ -10,6 +10,14 @@ Implements
 
 *Pythonic interfaces using decorators*
 
+Decorate your implementation class with `@implements(<InterfaceClass>)`.
+That's it!. `implements` will ensure that your implementation satisfies
+attributes, methods and their signatures as defined in your interface.
+
+Moreover, interfaces are enforced via composition. Implementations
+don't inherit interfaces. Your MROs remain untouched and interfaces
+are evaluated early during import instead of class instantiation.
+
 Install
 -------
 
