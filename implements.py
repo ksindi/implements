@@ -71,6 +71,37 @@ def is_staticmethod(obj):
     return isinstance(obj, (staticmethod, types.BuiltinMethodType))
 
 
+def verify_method_type(method_typer, expected_type,
+                       name, ifc_obj, cls_obj, ifc_name, cls_name):
+    """Verify a method's type across interface and implementation. Raises
+    an exception if they don't match.
+
+    Args:
+        method_typer (callable):
+            A method type checker (single argument callable) which returns
+            True if the supplied argument matches the method type
+        expected_type (string):
+            A string representation of the expected method type. This is
+            used in the exception string
+        name (string):
+            Name of the attribute being checked
+        ifc_obj (object):
+            The fetched object from the interface, matched by name
+        cls_obj (object):
+            The fetched object from the implementation, matched by name
+        ifc_name (string):
+            Name of the interface class
+        cls_name (string):
+            Name of the implementation class
+    """
+    if method_typer(ifc_obj):
+        if not method_typer(cls_obj):
+            raise NotImplementedError(
+                "'{}' must implement '{}' as {} as defined in interface '{}'"
+                "".format(cls_name, name, expected_type, ifc_name)
+            )
+
+
 def verify_methods(interface_cls, cls):
     def methods_predicate(m):
         return inspect.isfunction(m) or inspect.ismethod(m)
@@ -86,18 +117,16 @@ def verify_methods(interface_cls, cls):
         ifc_obj = getobj_via_dict(interface_cls, name)
         cls_obj = getobj_via_dict(cls, name)
 
-        if is_classmethod(ifc_obj):
-            if not is_classmethod(cls_obj):
-                raise NotImplementedError(
-                    "'{}' must implement '{}' as a classmethod as defined in "
-                    "interface '{}'".format(cls_name, name, ifc_name)
-                )
-        elif is_staticmethod(ifc_obj):
-            if not is_staticmethod(cls_obj):
-                raise NotImplementedError(
-                    "'{}' must implement '{}' as a staticmethod as defined in "
-                    "interface '{}'".format(cls_name, name, ifc_name)
-                )
+        method_types_to_check = [
+            (is_classmethod, "a classmethod"),
+            (is_staticmethod, "a staticmethod"),
+            (inspect.isasyncgenfunction, "an async genenerator-function"),
+            (inspect.isgeneratorfunction, "a generator-function"),
+            (inspect.iscoroutinefunction, "a coroutine-function")
+        ]
+        for (method_typer, expected_type) in method_types_to_check:
+            verify_method_type(method_typer, expected_type,
+                               name, ifc_obj, cls_obj, ifc_name, cls_name)
 
         if cls_signature != signature:
             raise NotImplementedError(

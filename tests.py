@@ -734,6 +734,70 @@ def test_async():
             pass
 
 
+def test_async_method():
+    class AsyncFooInterface:
+        async def foo(self):
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(AsyncFooInterface)
+        class FooImplementationFail:                # skipcq: PYL-W0612
+            def foo(self):
+                pass
+
+    @implements(AsyncFooInterface)
+    class AsyncFooImplementation:                   # skipcq: PYL-W0612
+        async def foo(self):
+            pass
+
+
+def test_generator():
+    class GenFooInterface:
+        def foo(self):                              # skipcq: PYL-R0201
+            yield 1
+
+    with pytest.raises(NotImplementedError):
+        @implements(GenFooInterface)
+        class FooImplementationFail:                # skipcq: PYL-W0612
+            def foo(self):
+                pass
+
+    # must fail a generator which happens to be async
+    with pytest.raises(NotImplementedError):
+        @implements(GenFooInterface)
+        class AsyncGenFooImplementationFail:        # skipcq: PYL-W0612
+            async def foo(self):
+                yield 1
+
+    @implements(GenFooInterface)
+    class GenFooImplementation:                     # skipcq: PYL-W0612
+        def foo(self):                              # skipcq: PYL-R0201
+            yield 1
+
+
+def test_asyncgen_method():
+    class AsyncGenFooInterface:
+        async def foo(self):
+            yield 1
+
+    with pytest.raises(NotImplementedError):
+        @implements(AsyncGenFooInterface)
+        class AsyncFooImplementationFail:           # skipcq: PYL-W0612
+            async def foo(self):
+                pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(AsyncGenFooInterface)
+        class GenFooImplementationFail:             # skipcq: PYL-W0612
+            def foo(self):                          # skipcq: PYL-R0201
+                yield 1
+
+    @implements(AsyncGenFooInterface)
+    class AsyncGenFooImplementation:                # skipcq: PYL-W0612
+        async def foo(self):
+            yield 1
+
+
 @py36
 def test_new_style_descriptors():
     class IntField:
