@@ -97,10 +97,10 @@ docs:
 .PHONY: release
 release: clean build
 	python3 setup.py sdist bdist_wheel
+	twine check dist/*
 	twine upload --verbose dist/*
 
 .PHONY: dist
 dist: clean build
-	python3 setup.py sdist
-	python3 setup.py bdist_wheel
-	ls -l dist
+	python3 setup.py sdist bdist_wheel
+	twine check dist/*
