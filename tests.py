@@ -746,14 +746,14 @@ def test_async_method():
                 pass
 
     @implements(AsyncFooInterface)
-    class AsyncFooImplementation:
+    class AsyncFooImplementation:                   # skipcq: PYL-W0612
         async def foo(self):
             pass
 
 
 def test_generator():
     class GenFooInterface:
-        def foo(self):
+        def foo(self):                              # skipcq: PYL-R0201
             yield 1
 
     with pytest.raises(NotImplementedError):
@@ -770,8 +770,8 @@ def test_generator():
                 yield 1
 
     @implements(GenFooInterface)
-    class GenFooImplementation:
-        def foo(self):
+    class GenFooImplementation:                     # skipcq: PYL-W0612
+        def foo(self):                              # skipcq: PYL-R0201
             yield 1
 
 
@@ -789,11 +789,11 @@ def test_asyncgen_method():
     with pytest.raises(NotImplementedError):
         @implements(AsyncGenFooInterface)
         class GenFooImplementationFail:             # skipcq: PYL-W0612
-            def foo(self):
+            def foo(self):                          # skipcq: PYL-R0201
                 yield 1
 
     @implements(AsyncGenFooInterface)
-    class AsyncGenFooImplementation:
+    class AsyncGenFooImplementation:                # skipcq: PYL-W0612
         async def foo(self):
             yield 1
 
