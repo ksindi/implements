@@ -324,7 +324,7 @@ def test_multiple_errors():
     match = r'^Found 3 errors in implementation:\n- .+\n- .+\n- .+\nwith .+'
     with pytest.raises(NotImplementedError, match=match):
         @implements(FooInterface)
-        class FooImplementationFail:
+        class FooImplementationFail:           # skipcq: PYL-W0612
             def __init__(self):
                 pass
 
