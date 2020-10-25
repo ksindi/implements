@@ -49,8 +49,9 @@ def implements(interface_cls):
         errors.extend(verify_properties(interface_cls, cls))
         errors.extend(verify_attributes(interface_cls, cls))
         if errors:
-            raise NotImplementedError('Found errors in interfaces:\n'
-                                      '\n'.join(errors))
+            raise NotImplementedError(
+                'Found {} errors in implementation:\n- {}\nwith {}'.format(
+                    len(errors), '\n- '.join(errors), cls))
         return cls
 
     return _decorator

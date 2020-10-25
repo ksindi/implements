@@ -311,6 +311,24 @@ def test_bad_constructor():
             pass
 
 
+def test_multiple_errors():
+    class FooInterface(Interface):
+        @property
+        def foo(self):
+            pass
+
+        def __init__(self, a):
+            pass
+
+    # Bad constructor, missing method getter, and missing class attribute (3)
+    match = r'^Found 3 errors in implementation:\n- .+\n- .+\n- .+\nwith .+'
+    with pytest.raises(NotImplementedError, match=match):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            def __init__(self):
+                pass
+
+
 def test_static():
     class FooInterface(Interface):
         @staticmethod
