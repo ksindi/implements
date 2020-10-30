@@ -44,9 +44,14 @@ def implements(interface_cls):
     defined by the `interface_cls`.
     """
     def _decorator(cls):
-        verify_methods(interface_cls, cls)
-        verify_properties(interface_cls, cls)
-        verify_attributes(interface_cls, cls)
+        errors = []
+        errors.extend(verify_methods(interface_cls, cls))
+        errors.extend(verify_properties(interface_cls, cls))
+        errors.extend(verify_attributes(interface_cls, cls))
+        if errors:
+            raise NotImplementedError(
+                'Found {} errors in implementation:\n- {}\nwith {}'.format(
+                    len(errors), '\n- '.join(errors), cls))
         return cls
 
     return _decorator
@@ -94,18 +99,21 @@ def verify_method_type(method_typer, expected_type,
         cls_name (string):
             Name of the implementation class
     """
+    errors = []
     if method_typer(ifc_obj):
         if not method_typer(cls_obj):
-            raise NotImplementedError(
+            errors.append(
                 "'{}' must implement '{}' as {} as defined in interface '{}'"
                 "".format(cls_name, name, expected_type, ifc_name)
             )
+    return errors
 
 
 def verify_methods(interface_cls, cls):
     def methods_predicate(m):
         return inspect.isfunction(m) or inspect.ismethod(m)
 
+    errors = []
     for name, method in inspect.getmembers(interface_cls, methods_predicate):
         signature = inspect.signature(method)
         cls_method = getattr(cls, name, None)
@@ -125,17 +133,21 @@ def verify_methods(interface_cls, cls):
             (inspect.iscoroutinefunction, "a coroutine-function")
         ]
         for (method_typer, expected_type) in method_types_to_check:
-            verify_method_type(method_typer, expected_type,
-                               name, ifc_obj, cls_obj, ifc_name, cls_name)
+            errors.extend(
+                verify_method_type(method_typer, expected_type,
+                                   name, ifc_obj, cls_obj, ifc_name, cls_name)
+            )
 
         if cls_signature != signature:
-            raise NotImplementedError(
+            errors.append(
                 "'{}' must implement method '{}{}' defined in interface '{}'"
                 .format(cls_name, name, signature, ifc_name)
             )
+    return errors
 
 
 def verify_properties(interface_cls, cls):
+    errors = []
     prop_attrs = dict(fget='getter', fset='setter', fdel='deleter')
     descriptors = inspect.getmembers(interface_cls, inspect.isdatadescriptor)
     for name, prop in descriptors:
@@ -148,20 +160,23 @@ def verify_properties(interface_cls, cls):
                 cls_name = cls.__name__
                 ifc_name = interface_cls.__name__
                 proptype = prop_attrs[attr]
-                raise NotImplementedError(
+                errors.append(
                     "'{}' must implement a {} for property '{}' defined in "
                     "interface '{}'".format(cls_name, proptype, name, ifc_name)
                 )
+    return errors
 
 
 def verify_attributes(interface_cls, cls):
+    errors = []
     interface_attributes = get_attributes(interface_cls)
     cls_attributes = get_attributes(cls)
     for missing_attr in interface_attributes - cls_attributes:
-        raise NotImplementedError(
+        errors.append(
             "'{}' must have class attribute '{}' defined in interface '{}'"
             .format(cls.__name__, missing_attr, interface_cls.__name__)
         )
+    return errors
 
 
 def get_attributes(cls):
