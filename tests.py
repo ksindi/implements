@@ -895,7 +895,7 @@ def test_descriptors_signature_getter():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail():
+        class FooImplementationFail:
             @property
             def someprop(self) -> int:
                 pass
@@ -913,7 +913,7 @@ def test_descriptors_signature_setter():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail():
+        class FooImplementationFail:
             @property
             def someprop(self):
                 pass
@@ -935,7 +935,7 @@ def test_descriptors_signature_deleter():
 
     with pytest.raises(NotImplementedError):
         @implements(FooInterface)
-        class FooImplementationFail():
+        class FooImplementationFail:
             @property
             def someprop(self):
                 pass
