@@ -10,8 +10,7 @@ with open('README.rst') as f:
 
 _DESCRIPTION = 'Pythonic interfaces using decorators'
 
-_AUTHORS = ('Kamil Sindi <ksindi@ksindi.com>, '
-            'Praveen G shirali <praveengshirali@gmail.com')
+_AUTHORS = 'Kamil Sindi <ksindi@ksindi.com>'
 
 _INSTALL_REQUIRES = ['setuptools_scm>=1.15.0']
 _SETUP_REQUIRES = ['setuptools>=18.0', 'pytest-runner',
