@@ -44,6 +44,7 @@ def implements(interface_cls):
     defined by the `interface_cls`.
     """
     def _decorator(cls):
+        verify_class_hierarchy(interface_cls, cls)
         errors = []
         errors.extend(verify_methods(interface_cls, cls))
         errors.extend(verify_properties(interface_cls, cls))
@@ -55,6 +56,26 @@ def implements(interface_cls):
         return cls
 
     return _decorator
+
+
+
+def get_mro(cls):
+    return cls.mro()[:-1] if cls.mro()[-1] is object else cls.mro()
+
+
+def verify_class_hierarchy(ifc, cls):
+    ifc_mro = get_mro(ifc)
+    cls_mro = get_mro(cls)
+    common = set(ifc_mro) & set(cls_mro)
+    if len(common):
+        raise ValueError(
+            "Found {} common classes between the implementation and the "
+            "interface. Expected none. The implementation class and any "
+            "class in its class-hierarchy, must not inherit from the "
+            "interface class, or any class from the interface hierarchy. "
+            "Common classes: [{}]"
+            "".format(len(common), ", ".join([str(s) for s in common]))
+        )
 
 
 def getobj_via_dict(cls, name):

@@ -15,7 +15,7 @@
 import sys
 import pytest
 
-from implements import Interface, implements
+from implements import Interface, implements, get_mro
 
 
 py36 = pytest.mark.skipif(sys.version_info < (3, 6), reason='requires py3.6')
@@ -942,4 +942,42 @@ def test_descriptors_signature_deleter():
 
             @someprop.deleter
             def someprop(self) -> int:
+                pass
+
+
+def test_get_mro():
+    class RegularClass:
+        pass
+
+    mro = get_mro(RegularClass)
+    assert object not in mro
+
+    expected = RegularClass.mro()[:-1]
+    assert mro == expected
+
+
+def test_class_hierarchy_overlap_of_common_class():
+    class CommonClass:
+        pass
+
+    class FooInterface(CommonClass):
+        def abc(self) -> str:
+            pass
+
+    with pytest.raises(ValueError):
+        @implements(FooInterface)
+        class FooImplemenation(CommonClass):
+            def abc(self) -> str:
+                pass
+
+
+def test_implementation_inheriting_from_interface():
+    class FooInterface:
+        def abc(self) -> str:
+            pass
+
+    with pytest.raises(ValueError):
+        @implements(FooInterface)
+        class FooImplemenation(FooInterface):
+            def abc(self) -> str:
                 pass
