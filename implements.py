@@ -156,14 +156,31 @@ def verify_properties(interface_cls, cls):
             # instanceof doesn't work for class function comparison
             ifc_prop_obj = getattr(prop, attr, None)
             cls_prop_obj = getattr(cls_prop, attr, None)
-            if ifc_prop_obj and type(ifc_prop_obj) != type(cls_prop_obj):
+            if ifc_prop_obj:
                 cls_name = cls.__name__
                 ifc_name = interface_cls.__name__
                 proptype = prop_attrs[attr]
-                errors.append(
-                    "'{}' must implement a {} for property '{}' defined in "
-                    "interface '{}'".format(cls_name, proptype, name, ifc_name)
-                )
+
+                # -- verify presence and type of data-descriptors
+                if type(ifc_prop_obj) != type(cls_prop_obj):
+                    errors.append(
+                        "'{}' must implement a {} for property '{}' defined "
+                        "in interface '{}'"
+                        "".format(cls_name, proptype, name, ifc_name)
+                    )
+                    continue
+
+                # -- verify signatures of data-descriptors
+                ifc_prop_sig = inspect.signature(ifc_prop_obj)
+                cls_prop_sig = None
+                if callable(cls_prop_obj):
+                    cls_prop_sig = inspect.signature(cls_prop_obj)
+                if ifc_prop_sig != cls_prop_sig:
+                    errors.append(
+                        "'{}' must implement a {} for property '{}' with the "
+                        "same signature as defined in interface '{}'"
+                        "".format(cls_name, proptype, name, ifc_name)
+                    )
     return errors
 
 
