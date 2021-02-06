@@ -885,3 +885,61 @@ def test_new_style_metaclasses():
     class Triangle(Polygon, sides=3):
         def rotate(self):
             pass
+
+
+def test_descriptors_signature_getter():
+    class FooInterface(Interface):
+        @property
+        def someprop(self) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail():
+            @property
+            def someprop(self) -> int:
+                pass
+
+
+def test_descriptors_signature_setter():
+    class FooInterface(Interface):
+        @property
+        def someprop(self):
+            pass
+
+        @someprop.setter
+        def someprop(self, value: str) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail():
+            @property
+            def someprop(self):
+                pass
+
+            @someprop.setter
+            def someprop(self, value: int) -> float:
+                pass
+
+
+def test_descriptors_signature_deleter():
+    class FooInterface(Interface):
+        @property
+        def someprop(self):
+            pass
+
+        @someprop.deleter
+        def someprop(self) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail():
+            @property
+            def someprop(self):
+                pass
+
+            @someprop.deleter
+            def someprop(self) -> int:
+                pass
