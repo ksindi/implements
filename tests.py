@@ -152,6 +152,28 @@ def test_deleters():
             pass
 
 
+def test_implementation_implements_more_descriptors():
+    class FooInterface(Interface):
+        @property
+        def foo(self):
+            pass
+
+    #   An implementation must implement all data descriptors defined in
+    #   the interface, however, the implementation could define more.
+    #
+    #   The case below must not generate errors because FooImplementationPass
+    #   defines a foo.setter which isn't defined by FooInterface
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @property
+        def foo(self):
+            pass
+
+        @foo.setter
+        def foo(self, val):
+            pass
+
+
 def test_missing_method():
     class FooInterface(Interface):
         def foo(self):

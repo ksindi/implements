@@ -154,9 +154,9 @@ def verify_properties(interface_cls, cls):
         cls_prop = getattr(cls, name, None)
         for attr in prop_attrs:
             # instanceof doesn't work for class function comparison
-            ifc_prop_type = type(getattr(prop, attr, None))
-            cls_prop_type = type(getattr(cls_prop, attr, None))
-            if ifc_prop_type != cls_prop_type:
+            ifc_prop_obj = getattr(prop, attr, None)
+            cls_prop_obj = getattr(cls_prop, attr, None)
+            if ifc_prop_obj and type(ifc_prop_obj) != type(cls_prop_obj):
                 cls_name = cls.__name__
                 ifc_name = interface_cls.__name__
                 proptype = prop_attrs[attr]
