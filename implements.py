@@ -58,7 +58,6 @@ def implements(interface_cls):
     return _decorator
 
 
-
 def get_mro(cls):
     return cls.mro()[:-1] if cls.mro()[-1] is object else cls.mro()
 
