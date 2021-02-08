@@ -44,6 +44,7 @@ def implements(interface_cls):
     defined by the `interface_cls`.
     """
     def _decorator(cls):
+        verify_class_hierarchy(interface_cls, cls)
         errors = []
         errors.extend(verify_methods(interface_cls, cls))
         errors.extend(verify_properties(interface_cls, cls))
@@ -55,6 +56,25 @@ def implements(interface_cls):
         return cls
 
     return _decorator
+
+
+def get_mro(cls):
+    return cls.mro()[:-1] if cls.mro()[-1] is object else cls.mro()
+
+
+def verify_class_hierarchy(ifc, cls):
+    ifc_mro = get_mro(ifc)
+    cls_mro = get_mro(cls)
+    common = set(ifc_mro) & set(cls_mro)
+    if len(common):
+        raise ValueError(
+            "Found {} common classes between the implementation and the "
+            "interface. Expected none. The implementation class and any "
+            "class in its class-hierarchy, must not inherit from the "
+            "interface class, or any class from the interface hierarchy. "
+            "Common classes: [{}]"
+            "".format(len(common), ", ".join([str(s) for s in common]))
+        )
 
 
 def getobj_via_dict(cls, name):
@@ -154,16 +174,33 @@ def verify_properties(interface_cls, cls):
         cls_prop = getattr(cls, name, None)
         for attr in prop_attrs:
             # instanceof doesn't work for class function comparison
-            ifc_prop_type = type(getattr(prop, attr, None))
-            cls_prop_type = type(getattr(cls_prop, attr, None))
-            if ifc_prop_type != cls_prop_type:
+            ifc_prop_obj = getattr(prop, attr, None)
+            cls_prop_obj = getattr(cls_prop, attr, None)
+            if ifc_prop_obj:
                 cls_name = cls.__name__
                 ifc_name = interface_cls.__name__
                 proptype = prop_attrs[attr]
-                errors.append(
-                    "'{}' must implement a {} for property '{}' defined in "
-                    "interface '{}'".format(cls_name, proptype, name, ifc_name)
-                )
+
+                # -- verify presence and type of data-descriptors
+                if type(ifc_prop_obj) != type(cls_prop_obj):
+                    errors.append(
+                        "'{}' must implement a {} for property '{}' defined "
+                        "in interface '{}'"
+                        "".format(cls_name, proptype, name, ifc_name)
+                    )
+                    continue
+
+                # -- verify signatures of data-descriptors
+                ifc_prop_sig = inspect.signature(ifc_prop_obj)
+                cls_prop_sig = None
+                if callable(cls_prop_obj):
+                    cls_prop_sig = inspect.signature(cls_prop_obj)
+                if ifc_prop_sig != cls_prop_sig:
+                    errors.append(
+                        "'{}' must implement a {} for property '{}' with the "
+                        "same signature as defined in interface '{}'"
+                        "".format(cls_name, proptype, name, ifc_name)
+                    )
     return errors
 
 

@@ -15,7 +15,7 @@
 import sys
 import pytest
 
-from implements import Interface, implements
+from implements import Interface, implements, get_mro
 
 
 py36 = pytest.mark.skipif(sys.version_info < (3, 6), reason='requires py3.6')
@@ -148,6 +148,28 @@ def test_deleters():
             pass
 
         @foo.deleter
+        def foo(self, val):
+            pass
+
+
+def test_implementation_implements_more_descriptors():
+    class FooInterface(Interface):
+        @property
+        def foo(self):
+            pass
+
+    #   An implementation must implement all data descriptors defined in
+    #   the interface, however, the implementation could define more.
+    #
+    #   The case below must not generate errors because FooImplementationPass
+    #   defines a foo.setter which isn't defined by FooInterface
+    @implements(FooInterface)
+    class FooImplementationPass:
+        @property
+        def foo(self):
+            pass
+
+        @foo.setter
         def foo(self, val):
             pass
 
@@ -863,3 +885,99 @@ def test_new_style_metaclasses():
     class Triangle(Polygon, sides=3):
         def rotate(self):
             pass
+
+
+def test_descriptors_signature_getter():
+    class FooInterface(Interface):
+        @property
+        def someprop(self) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @property
+            def someprop(self) -> int:
+                pass
+
+
+def test_descriptors_signature_setter():
+    class FooInterface(Interface):
+        @property
+        def someprop(self):
+            pass
+
+        @someprop.setter
+        def someprop(self, value: str) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @property
+            def someprop(self):
+                pass
+
+            @someprop.setter
+            def someprop(self, value: int) -> float:
+                pass
+
+
+def test_descriptors_signature_deleter():
+    class FooInterface(Interface):
+        @property
+        def someprop(self):
+            pass
+
+        @someprop.deleter
+        def someprop(self) -> str:
+            pass
+
+    with pytest.raises(NotImplementedError):
+        @implements(FooInterface)
+        class FooImplementationFail:
+            @property
+            def someprop(self):
+                pass
+
+            @someprop.deleter
+            def someprop(self) -> int:
+                pass
+
+
+def test_get_mro():
+    class RegularClass:
+        pass
+
+    mro = get_mro(RegularClass)
+    assert object not in mro
+
+    expected = RegularClass.mro()[:-1]
+    assert mro == expected
+
+
+def test_class_hierarchy_overlap_of_common_class():
+    class CommonClass:
+        pass
+
+    class FooInterface(CommonClass):
+        def abc(self) -> str:
+            pass
+
+    with pytest.raises(ValueError):
+        @implements(FooInterface)
+        class FooImplemenation(CommonClass):
+            def abc(self) -> str:
+                pass
+
+
+def test_implementation_inheriting_from_interface():
+    class FooInterface:
+        def abc(self) -> str:
+            pass
+
+    with pytest.raises(ValueError):
+        @implements(FooInterface)
+        class FooImplemenation(FooInterface):
+            def abc(self) -> str:
+                pass
