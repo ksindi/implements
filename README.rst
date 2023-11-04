@@ -41,7 +41,7 @@ Advantages
 Usage
 -----
 
-With _implements_, implementation classes and interface classes must have their own independent class hierarchies. Unlike common patterns, the implementation class must not inherit from an interface class. From version ``0.3.0`` and onwards, this condition is checked automatically and an error is raised on a violation.
+With implements, implementation classes and interface classes must have their own independent class hierarchies. Unlike common patterns, the implementation class must not inherit from an interface class. From version ``0.3.0`` and onwards, this condition is checked automatically and an error is raised on a violation.
 
 
 .. code-block:: python
